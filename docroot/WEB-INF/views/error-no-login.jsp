@@ -1,0 +1,1 @@
+<h3>Para acceder a la funcionalidad de este portlet debe iniciar una sesion.</h3>
