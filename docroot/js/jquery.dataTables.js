@@ -2,6 +2,13 @@
  * ©2008-2014 SpryMedia Ltd - datatables.net/license
  */
 
+var locale= "en";
+var i18n_en= {mostrar:"Show", buscar:"Search", mostrando:"Showing", a:"to", de:"of",
+		primero:"First", ultimo:"Last", anterior:"Previous", siguiente:"Next", vacio:"No data available in table"};
+var i18n_es= {mostrar:"Mostrar", buscar:"Buscar", mostrando:"Mostrando", a:"a", de:"de",
+		primero:"Primero", ultimo:"Ultimo", anterior:"Anterior", siguiente:"Siguiente", vacio:"No hay datos disponibles en la tabla"};
+var i18n= {en: i18n_en, es: i18n_es};
+
 /**
  * @summary     DataTables
  * @description Paginate, search and order HTML tables
@@ -10988,7 +10995,7 @@
 				 *    } );
 				 */
 				//"sFirst": "First",
-				"sFirst": "Primero",
+				"sFirst": i18n[locale]["primero"],
 	
 				/**
 				 * Text to use when using the 'full_numbers' type of pagination for the
@@ -11011,7 +11018,7 @@
 				 *    } );
 				 */
 				//"sLast": "Last",
-				"sLast": "Ultimo",
+				"sLast": i18n[locale]["ultimo"],
 	
 				/**
 				 * Text to use for the 'next' pagination button (to take the user to the
@@ -11034,7 +11041,7 @@
 				 *    } );
 				 */
 				//"sNext": "Next",
-				"sNext": "Siguiente",
+				"sNext": i18n[locale]["siguiente"],
 	
 				/**
 				 * Text to use for the 'previous' pagination button (to take the user to
@@ -11057,7 +11064,7 @@
 				 *    } );
 				 */
 				//"sPrevious": "Previous"
-				"sPrevious": "Anterior"
+				"sPrevious": i18n[locale]["anterior"]
 			},
 	
 			/**
@@ -11081,7 +11088,7 @@
 			 *    } );
 			 */
 			//"sEmptyTable": "No data available in table",
-			"sEmptyTable": "No hay datos disponibles en la tabla",
+			"sEmptyTable": i18n[locale]["vacio"],
 	
 	
 			/**
@@ -11114,7 +11121,7 @@
 			 *    } );
 			 */
 			//"sInfo": "Showing _START_ to _END_ of _TOTAL_",
-			"sInfo": "Mostrando _START_ a _END_ de _TOTAL_",
+			"sInfo": i18n[locale]["mostrando"] + " _START_ " + i18n[locale]["a"] + " _END_ "+ i18n[locale]["de"] +" _TOTAL_",
 	
 	
 			/**
@@ -11276,7 +11283,7 @@
 			 *    } );
 			 */
 			//"sLengthMenu": "Show _MENU_",
-			"sLengthMenu": "Mostrar _MENU_",
+			"sLengthMenu": i18n[locale]["mostrar"] + " _MENU_",
 	
 			/**
 			 * When using Ajax sourced data and during the first draw when DataTables is
@@ -11356,7 +11363,7 @@
 			 *    } );
 			 */
 			//"sSearch": "Search:",
-			"sSearch": "Buscar:",
+			"sSearch": i18n[locale]["buscar"] + ":",
 	
 			/**
 			 * Assign a `placeholder` attribute to the search `input` element

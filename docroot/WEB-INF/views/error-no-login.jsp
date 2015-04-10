@@ -1,1 +1,1 @@
-<h3>Para acceder a la funcionalidad de este portlet debe iniciar una sesion.</h3>
+<h5>Para acceder a la funcionalidad de este portlet debe iniciar una sesion y pertener a un grupo con permisos.</h5>

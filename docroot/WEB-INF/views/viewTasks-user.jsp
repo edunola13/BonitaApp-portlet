@@ -1,9 +1,14 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> 
 <%@ page import="bonitaClass.Task" %>
 <%@ page import="java.util.*" %>
 <portlet:defineObjects />
+<!-- En si no es necesario lo del locale ya que liferay lo setea -->
+<fmt:setLocale value="<%=renderRequest.getLocale() %>"/>
+<fmt:setBundle basename="content.Languaje"/>
+
 <%
 List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 %>
@@ -16,14 +21,14 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 	<thead>
 		<tr>
 			<th>Id</th>
-			<th>Nombre</th>
-			<th>Proceso</th>
-			<th>Caso</th>
-			<th>Estado</th>
-			<th>Prioridad</th>
-			<th>DeadLinea</th>
-			<th>Asignado</th>			
-			<th>Funciones</th>
+			<th><fmt:message key="nombre" /></th>
+			<th><fmt:message key="proceso" /></th>
+			<th><fmt:message key="caso" /></th>
+			<th><fmt:message key="estado" /></th>
+			<th><fmt:message key="prioridad" /></th>
+			<th><fmt:message key="deadLine" /></th>
+			<th><fmt:message key="asignado" /></th>			
+			<th><fmt:message key="funciones" /></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -37,9 +42,9 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 				<td><%=task.getPriority() %></td>
 				<td>
 				<%if(task.exceededDeadline()){ %>
-					Excedido <%=task.timeExceededDeadline() %>
+					<fmt:message key="excedido" /> <%=task.timeExceededDeadline() %>
 				<%}else{ %>
-					Resta <%=task.timeToDeadline() %>
+					<fmt:message key="resta" /> <%=task.timeToDeadline() %>
 				<%} %>
 				</td>
 				<%if(task.getAssignedId() == 0L){%>
@@ -48,7 +53,7 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 						<portlet:actionURL var="assignId" name="assignId">
 							<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
 						</portlet:actionURL>
-						<a href="<%= assignId%>" class="btn btn-primary">Asignar</a>
+						<a href="<%= assignId%>" class="btn btn-primary"><fmt:message key="asignar" /></a>
 					</td>
 				<%}else{ %>
 					<td>SI</td>
@@ -56,17 +61,17 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 						<portlet:actionURL var="releaseId" name="releaseId">
 							<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
 						</portlet:actionURL>
-						<a href="<%= releaseId%>" class="btn btn-primary">Liberar</a>
+						<a href="<%= releaseId%>" class="btn btn-primary"><fmt:message key="liberar" /></a>
 						<%if(renderRequest.getPreferences().getValue("doTaskAjax", "si").equals("no")){ %>
 							<portlet:actionURL var="doTask" name="doTask">
 								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>							
 							</portlet:actionURL>
-							<a href="<%= doTask%>" class="btn btn-primary">Realizar</a>
+							<a href="<%= doTask%>" class="btn btn-primary"><fmt:message key="realizar" /></a>
 						<%}else{ %>
 							<portlet:resourceURL var="doTaskAjax" id="doTaskAjax">
 								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>						
 							</portlet:resourceURL>
-							<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax %>')">Realizar - Ajax</button>
+							<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax %>')"><fmt:message key="realizar" /></button>
 						<%} %>				
 					</td>
 				<%} %>				

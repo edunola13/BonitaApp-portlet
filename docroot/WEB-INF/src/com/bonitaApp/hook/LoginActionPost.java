@@ -24,7 +24,7 @@ public class LoginActionPost  extends Action {
 	private BonitaConfig config;	
 	
     public void run(HttpServletRequest req, HttpServletResponse res){
-        System.out.println("## My custom login action post");      	
+        System.out.println("## Custom Login Bonita App");      	
         this.setBonitaConfig();
         
         try {			
@@ -56,7 +56,6 @@ public class LoginActionPost  extends Action {
 				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -81,11 +80,11 @@ public class LoginActionPost  extends Action {
 			this.config.setServerUrl(prop.getProperty("serverUrl"));
 			this.config.setUserAdmin(prop.getProperty("userAdmin"));
 			this.config.setPassAdmin(prop.getProperty("passAdmin"));
+			this.config.setAdminProfile(prop.getProperty("adminProfile"));
 			this.config.setDefaultGroup(prop.getProperty("defaultGroup"));
 			this.config.setDefaultRole(prop.getProperty("defaultRole"));
 			this.config.setLiferayGroups(prop.getProperty("liferayGroups"));
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}    
     }

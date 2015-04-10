@@ -1,9 +1,12 @@
 <%@page import="com.liferay.portal.theme.ThemeDisplay"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> 
 <%@ page import="bonitaClass.Case" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <portlet:defineObjects />
+<fmt:setBundle basename="content.Languaje"/>
+
 <%
 List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 %>
@@ -16,10 +19,10 @@ List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 	<thead>
 		<tr>
 			<th>Id</th>
-			<th>Proceso</th>
-			<th>Estado</th>
-			<th>Iniciado Por</th>
-			<th>Iniciado</th>
+			<th><fmt:message key="proceso" /></th>
+			<th><fmt:message key="estado" /></th>
+			<th><fmt:message key="iniciado-por" /></th>
+			<th><fmt:message key="iniciado" /></th>
 		</tr>
 	</thead>
 	<tbody>

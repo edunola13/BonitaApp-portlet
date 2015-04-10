@@ -1,7 +1,10 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> 
 <%@ page import="bonitaClass.Process" %>
 <%@ page import="java.util.*" %>
 <portlet:defineObjects />
+<fmt:setBundle basename="content.Languaje"/>
+
 <%
 List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 %>
@@ -10,14 +13,12 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 
 <jsp:include page="../view-sections/alert.jsp"></jsp:include>
 
-<h2>Aplicaciones</h2>
-
 <table id="tabla-bonita" class="table table-striped table-bordered table-hover">
 	<thead>
 		<tr>
 			<th>Id</th>
-			<th>Nombre</th>
-			<th>Funciones</th>
+			<th><fmt:message key="nombre" /></th>
+			<th><fmt:message key="funciones" /></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -29,7 +30,7 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 					<portlet:actionURL var="startCase" name="startCase">
 						<portlet:param name="processId" value="<%=Long.toString(process.getId()) %>"/>
 					</portlet:actionURL>
-					<a href="<%= startCase%>" class="btn btn-primary">Iniciar Caso</a>
+					<a href="<%= startCase%>" class="btn btn-primary"><fmt:message key="iniciarCaso" /></a>
 				</td>
 			</tr>
 		<%} %>

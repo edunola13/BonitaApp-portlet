@@ -7,6 +7,7 @@ public class BonitaConfig {
 	private String serverUrl= "http://localhost:8080/bonita/";
 	private String userAdmin= "admin";
 	private String passAdmin= "";
+	private String adminProfile= "";
 	private String defaultGroup= "";
 	private String defaultRole= "";
 	private String liferayGroups= "";
@@ -33,6 +34,14 @@ public class BonitaConfig {
 
 	public void setPassAdmin(String passAdmin) {
 		this.passAdmin = passAdmin;
+	}
+
+	public String getAdminProfile() {
+		return adminProfile;
+	}
+
+	public void setAdminProfile(String adminProfile) {
+		this.adminProfile = adminProfile;
 	}
 
 	public String getDefaultGroup() {
