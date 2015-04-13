@@ -3,7 +3,7 @@
 <portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0">
 	<portlet>
 		<portlet-name>bonitaApp</portlet-name>
-		<display-name>BonitaApp</display-name>
+		<display-name>BonitaApp-User</display-name>
 		
 		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
 		<init-param>
@@ -15,7 +15,6 @@
 		<supports>
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
-            <portlet-mode>edit</portlet-mode>
 		</supports>
 		<portlet-info>
 			<title>BonitaApp</title>
@@ -37,6 +36,74 @@
 		<supported-publishing-event xmlns:x='http://BontaAppLiferay.com'>
           	<qname>x:doTask</qname>
         </supported-publishing-event>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>bonitaApp-adminApps</portlet-name>
+		<display-name>BonitaApp-AdminApps</display-name>
+		
+		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+		<init-param>
+			<name>contextConfigLocation</name>
+			<value>/WEB-INF/config/springConfig-adminApps.xml</value>
+		</init-param>
+		
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>BonitaApp Admin Apps</title>
+			<short-title>BonitaApp Admin Apps</short-title>
+			<keywords>BonitaApp Admin Apps</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>bonitaApp-adminOrg</portlet-name>
+		<display-name>BonitaApp-adminOrg</display-name>
+		
+		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+		<init-param>
+			<name>contextConfigLocation</name>
+			<value>/WEB-INF/config/springConfig-adminOrg.xml</value>
+		</init-param>
+		
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>BonitaApp Admin Org</title>
+			<short-title>BonitaApp Admin Org</short-title>
+			<keywords>BonitaApp Admin Org</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
 	</portlet>
 	
 	<portlet>

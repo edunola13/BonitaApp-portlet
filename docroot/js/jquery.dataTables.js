@@ -1,13 +1,132 @@
 /*! DataTables 1.10.6
  * Â©2008-2014 SpryMedia Ltd - datatables.net/license
  */
-
-var locale= "en";
-var i18n_en= {mostrar:"Show", buscar:"Search", mostrando:"Showing", a:"to", de:"of",
-		primero:"First", ultimo:"Last", anterior:"Previous", siguiente:"Next", vacio:"No data available in table"};
-var i18n_es= {mostrar:"Mostrar", buscar:"Buscar", mostrando:"Mostrando", a:"a", de:"de",
-		primero:"Primero", ultimo:"Ultimo", anterior:"Anterior", siguiente:"Siguiente", vacio:"No hay datos disponibles en la tabla"};
-var i18n= {en: i18n_en, es: i18n_es};
+	
+var i18n_en= {
+		    "sEmptyTable":     "No data available in table",
+		    "sInfo":           "Showing _START_ to _END_ of _TOTAL_",
+		    "sInfoEmpty":      "Showing 0 to 0 of 0 entries",
+		    "sInfoFiltered":   "(filtered from _MAX_ total)",
+		    "sInfoPostFix":    "",
+		    "sInfoThousands":  ",",
+		    "sLengthMenu":     "Show _MENU_",
+		    "sLoadingRecords": "Loading...",
+		    "sProcessing":     "Processing...",
+		    "sSearch":         "Search:",
+		    "sZeroRecords":    "No matching records found",
+		    "oPaginate": {
+		        "sFirst":    "First",
+		        "sLast":     "Last",
+		        "sNext":     "Next",
+		        "sPrevious": "Previous"
+		    },
+		    "oAria": {
+		        "sSortAscending":  ": activate to sort column ascending",
+		        "sSortDescending": ": activate to sort column descending"
+		    }
+	};
+var i18n_es= {
+		    "sProcessing":     "Procesando...",
+		    "sLengthMenu":     "Mostrar _MENU_",
+		    "sZeroRecords":    "No se encontraron resultados",
+		    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+		    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+		    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+		    "sInfoFiltered":   "(filtrado de un total de _MAX_)",
+		    "sInfoPostFix":    "",
+		    "sSearch":         "Buscar:",
+		    "sUrl":            "",
+		    "sInfoThousands":  ",",
+		    "sLoadingRecords": "Cargando...",
+		    "oPaginate": {
+		        "sFirst":    "Primero",
+		        "sLast":     "&Uacute;ltimo",
+		        "sNext":     "Siguiente",
+		        "sPrevious": "Anterior"
+		    },
+		    "oAria": {
+		        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+		        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+		    }
+	};
+var i18n_fr= {
+		    "sProcessing":     "Traitement en cours...",
+		    "sSearch":         "Rechercher&nbsp;:",
+		    "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
+		    "sInfo":           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+		    "sInfoEmpty":      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+		    "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+		    "sInfoPostFix":    "",
+		    "sLoadingRecords": "Chargement en cours...",
+		    "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+		    "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
+		    "oPaginate": {
+		        "sFirst":      "Premier",
+		        "sPrevious":   "Pr&eacute;c&eacute;dent",
+		        "sNext":       "Suivant",
+		        "sLast":       "Dernier"
+		    },
+		    "oAria": {
+		        "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+		        "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
+		    }
+	};
+var i18n_it= {
+		    "sEmptyTable":     "Nessun dato presente nella tabella",
+		    "sInfo":           "Vista da _START_ a _END_ di _TOTAL_ elementi",
+		    "sInfoEmpty":      "Vista da 0 a 0 di 0 elementi",
+		    "sInfoFiltered":   "(filtrati da _MAX_ elementi totali)",
+		    "sInfoPostFix":    "",
+		    "sInfoThousands":  ",",
+		    "sLengthMenu":     "Visualizza _MENU_ elementi",
+		    "sLoadingRecords": "Caricamento...",
+		    "sProcessing":     "Elaborazione...",
+		    "sSearch":         "Cerca:",
+		    "sZeroRecords":    "La ricerca non ha portato alcun risultato.",
+		    "oPaginate": {
+		        "sFirst":      "Inizio",
+		        "sPrevious":   "Precedente",
+		        "sNext":       "Successivo",
+		        "sLast":       "Fine"
+		    },
+		    "oAria": {
+		        "sSortAscending":  ": attiva per ordinare la colonna in ordine crescente",
+		        "sSortDescending": ": attiva per ordinare la colonna in ordine decrescente"
+		    }
+	};
+var i18n_de= {
+		    "sEmptyTable":      "Keine Daten in der Tabelle vorhanden",
+		    "sInfo":            "_START_ bis _END_ von _TOTAL_ Eintr&auml;gen",
+		    "sInfoEmpty":       "0 bis 0 von 0 Einträgen",
+		    "sInfoFiltered":    "(gefiltert von _MAX_ Einträgen)",
+		    "sInfoPostFix":     "",
+		    "sInfoThousands":   ".",
+		    "sLengthMenu":      "_MENU_ Eintr&auml;ge anzeigen",
+		    "sLoadingRecords":  "Wird geladen...",
+		    "sProcessing":      "Bitte warten...",
+		    "sSearch":          "Suchen",
+		    "sZeroRecords":     "Keine Eintr&auml;ge vorhanden.",
+		    "oPaginate": {
+		        "sFirst":       "Erste",
+		        "sPrevious":    "Zur&uuml;ck",
+		        "sNext":        "N&auml;chste",
+		        "sLast":        "Letzte"
+		    },
+		    "oAria": {
+		        "sSortAscending":  ": aktivieren, um Spalte aufsteigend zu sortieren",
+		        "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
+		    }
+	};
+	
+var i18n= {en: i18n_en, es: i18n_es, fr: i18n_fr, it: i18n_it, de: i18n_de};
+	
+function change_locale_i18n(locale){
+	locale= locale.toLowerCase();
+	if(i18n[locale] != null){
+		return i18n[locale];
+	}
+	return i18n["en"];
+}
 
 /**
  * @summary     DataTables
@@ -86,7 +205,6 @@ var i18n= {en: i18n_en, es: i18n_es};
 	 *    } );
 	 */
 	var DataTable;
-
 	
 	/*
 	 * It is useful to have variables which are scoped locally so only the
@@ -10994,8 +11112,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 				 *      } );
 				 *    } );
 				 */
-				//"sFirst": "First",
-				"sFirst": i18n[locale]["primero"],
+				"sFirst": "First",
 	
 				/**
 				 * Text to use when using the 'full_numbers' type of pagination for the
@@ -11017,8 +11134,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 				 *      } );
 				 *    } );
 				 */
-				//"sLast": "Last",
-				"sLast": i18n[locale]["ultimo"],
+				"sLast": "Last",
 	
 				/**
 				 * Text to use for the 'next' pagination button (to take the user to the
@@ -11040,8 +11156,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 				 *      } );
 				 *    } );
 				 */
-				//"sNext": "Next",
-				"sNext": i18n[locale]["siguiente"],
+				"sNext": "Next",
 	
 				/**
 				 * Text to use for the 'previous' pagination button (to take the user to
@@ -11063,8 +11178,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 				 *      } );
 				 *    } );
 				 */
-				//"sPrevious": "Previous"
-				"sPrevious": i18n[locale]["anterior"]
+				"sPrevious": "Previous"
 			},
 	
 			/**
@@ -11087,8 +11201,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 			 *      } );
 			 *    } );
 			 */
-			//"sEmptyTable": "No data available in table",
-			"sEmptyTable": i18n[locale]["vacio"],
+			"sEmptyTable": "No data available in table",
 	
 	
 			/**
@@ -11120,8 +11233,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 			 *      } );
 			 *    } );
 			 */
-			//"sInfo": "Showing _START_ to _END_ of _TOTAL_",
-			"sInfo": i18n[locale]["mostrando"] + " _START_ " + i18n[locale]["a"] + " _END_ "+ i18n[locale]["de"] +" _TOTAL_",
+			"sInfo": "Showing _START_ to _END_ of _TOTAL_",
 	
 	
 			/**
@@ -11282,8 +11394,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 			 *      } );
 			 *    } );
 			 */
-			//"sLengthMenu": "Show _MENU_",
-			"sLengthMenu": i18n[locale]["mostrar"] + " _MENU_",
+			"sLengthMenu": "Show _MENU_",
 	
 			/**
 			 * When using Ajax sourced data and during the first draw when DataTables is
@@ -11306,8 +11417,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 			 *      } );
 			 *    } );
 			 */
-			//"sLoadingRecords": "Loading...",
-			"sLoadingRecords": "Cargando...",
+			"sLoadingRecords": "Loading...",
 	
 			/**
 			 * Text which is displayed when the table is processing a user action
@@ -11327,8 +11437,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 			 *      } );
 			 *    } );
 			 */
-			//"sProcessing": "Processing...",
-			"sProcessing": "Procesando...",
+			"sProcessing": "Processing...",
 	
 			/**
 			 * Details the actions that will be taken when the user types into the
@@ -11362,8 +11471,7 @@ var i18n= {en: i18n_en, es: i18n_es};
 			 *      } );
 			 *    } );
 			 */
-			//"sSearch": "Search:",
-			"sSearch": i18n[locale]["buscar"] + ":",
+			"sSearch": "Search:",
 	
 			/**
 			 * Assign a `placeholder` attribute to the search `input` element
@@ -11420,10 +11528,9 @@ var i18n= {en: i18n_en, es: i18n_es};
 			 *      } );
 			 *    } );
 			 */
-			//"sZeroRecords": "No matching records found"
-			"sZeroRecords": "No se han encontrado resultados"
-		},
-	
+			"sZeroRecords": "No matching records found"
+		},	
+		
 	
 		/**
 		 * This parameter allows you to have define the global filtering state at
