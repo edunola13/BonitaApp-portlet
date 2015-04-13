@@ -153,6 +153,14 @@ public class BonitaAdminOrg {
 	}
 	
 	private Boolean isAdmin(PortletSession portletSession){
-		return true;
+		Boolean isAdmin= false;
+		if(portletSession.getAttribute("BONITA_API_ADMIN", PortletSession.APPLICATION_SCOPE) != null){
+			isAdmin= (Boolean) portletSession.getAttribute("BONITA_API_ADMIN", PortletSession.APPLICATION_SCOPE);
+		}else{
+			BonitaApi bonita= this.getBonita(portletSession);
+			isAdmin= bonita.hasProfile(bonita.actualUser().getId(), this.config.getAdminProfile());
+			portletSession.setAttribute("BONITA_API_ADMIN", isAdmin,PortletSession.APPLICATION_SCOPE);
+		}
+		return isAdmin;
 	}
 }

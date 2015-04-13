@@ -8,6 +8,8 @@ import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import bonitaApi.BonitaApi;
 import bonitaClass.Case;
@@ -108,11 +111,21 @@ public class BonitaAdminApps {
 	}
 	
 	/**
+	 * Formulario para asignar tarea
+	 */
+	@ResourceMapping(value="assignTask")
+	public String assignTask(ResourceRequest request,ResourceResponse response, @RequestParam long taskId){
+		request.setAttribute("task", this.getBonita(request.getPortletSession()).task(taskId));
+		request.setAttribute("users", this.getBonita(request.getPortletSession()).users(0, 100000));
+		return "assignTask-admin";
+	}
+	
+	/**
 	 * Asignar Tarea
 	 */
 	@ActionMapping(value="assignId")
-	public void assignId(ActionRequest request, ActionResponse response, @RequestParam long taskId, @RequestParam long userId){
-		Boolean exito= this.getBonita(request.getPortletSession()).assignTask(taskId, userId);
+	public void assignId(ActionRequest request, ActionResponse response){
+		Boolean exito= this.getBonita(request.getPortletSession()).assignTask(Long.parseLong(request.getParameter("taskId")), Long.parseLong(request.getParameter("userId")));
 		if(!exito){
 			response.setRenderParameter("rtaAction", "error");
 		}else{
@@ -191,6 +204,7 @@ public class BonitaAdminApps {
 		response.setRenderParameter("action", "processes");
 	}
 	
+	
 	private BonitaApi getBonita(PortletSession portletSession){
 		BonitaApi bonita= null;
 		if(portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE) != null){
@@ -208,6 +222,14 @@ public class BonitaAdminApps {
 	}
 	
 	private Boolean isAdmin(PortletSession portletSession){
-		return true;
+		Boolean isAdmin= false;
+		if(portletSession.getAttribute("BONITA_API_ADMIN", PortletSession.APPLICATION_SCOPE) != null){
+			isAdmin= (Boolean) portletSession.getAttribute("BONITA_API_ADMIN", PortletSession.APPLICATION_SCOPE);
+		}else{
+			BonitaApi bonita= this.getBonita(portletSession);
+			isAdmin= bonita.hasProfile(bonita.actualUser().getId(), this.config.getAdminProfile());
+			portletSession.setAttribute("BONITA_API_ADMIN", isAdmin,PortletSession.APPLICATION_SCOPE);
+		}
+		return isAdmin;
 	}
 }

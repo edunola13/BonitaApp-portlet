@@ -68,10 +68,14 @@ public class BonitaConfig {
 		}
 	}
 	
-	public String[] getLiferayGroups() {
+	public String[] getSeparateLiferayGroups() {
 		return this.liferayGroups.split(",");
 	}
 
+	public String getLiferayGroups() {
+		return this.liferayGroups;
+	}
+	
 	public void setLiferayGroups(String groups) {
 		this.liferayGroups = groups;
 	}	

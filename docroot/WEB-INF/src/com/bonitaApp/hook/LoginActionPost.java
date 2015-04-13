@@ -33,7 +33,7 @@ public class LoginActionPost  extends Action {
 			Boolean isUserBonita= this.config.allLiferayGroups();
 			if(! isUserBonita){
 				for(com.liferay.portal.model.UserGroup grupo : currentUser.getUserGroups()){
-					if(Arrays.asList(this.config.getLiferayGroups()).contains(grupo.getName())){
+					if(Arrays.asList(this.config.getSeparateLiferayGroups()).contains(grupo.getName())){
 						isUserBonita= true;
 						break;
 					}

@@ -1,5 +1,6 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> 
 <%@ page import="bonitaClass.Task" %>
 <%@ page import="java.util.*" %>
@@ -49,10 +50,10 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 				<%if(task.getAssignedId() == 0L){%>
 					<td>NO</td>
 					<td>
-						<portlet:actionURL var="assignId" name="assignId">
-							<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
-						</portlet:actionURL>
-						<a href="<%= assignId%>" class="btn btn-primary"><fmt:message key="asignar" /></a>
+						<portlet:resourceURL var="assignTask" id="assignTask">
+							<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>						
+						</portlet:resourceURL>
+						<button class="btn btn-primary" onclick="assignTask('<%=assignTask %>')"><fmt:message key="asignar" /></button>
 					</td>
 				<%}else{ %>
 					<td>SI - UserId <%=task.getAssignedId() %></td>
@@ -68,5 +69,44 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 	</tbody>	
 </table>
 
+<aui:script>
+	function assignTask(url) {
+  		AUI().use( 'aui-io-deprecated',
+     		'liferay-util-window',
+     		function(A) {
+     			Liferay.Util.openWindow({
+                   	dialog: {
+                       centered: true,
+                       destroyOnClose: true,
+                       cache: false,
+                       width: "400",
+                       modal: true
+                  	},
+                  	title: 'Asignar Tarea',
+                  	id:'assigntask'
+              	});
+                      
+              	Liferay.provide(
+                    window,
+                    '<portlet:namespace/>closePopup',
+                    function(popupIdToClose) {
+                    	var popupDialog = Liferay.Util.Window.getById(popupIdToClose);
+                      	popupDialog.destroy();
+                    }, 
+                    ['liferay-util-window']
+               	);
+   		});
+   		
+   		$.ajax({
+			url:url,
+			success:function(data){
+				$("#assigntask").find(".modal-body").html(data);
+			},
+			error: function(){
+				alert("error");	
+			}				
+		});  
+  	}  
+</aui:script>
 
 <jsp:include page="../view-sections/footer-adminApps.jsp"></jsp:include>

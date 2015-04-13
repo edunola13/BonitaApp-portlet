@@ -178,6 +178,7 @@ public class BonitaUserController {
 		response.setRenderParameter("action", "tasks");
 	}
 	
+	@SuppressWarnings("deprecation")
 	@ResourceMapping(value="doTaskAjax")
 	public String doTaskAjax(ResourceRequest request,ResourceResponse response, @RequestParam long taskId){	
 		bonitaClass.User user= this.getBonita(request.getPortletSession()).actualUser();

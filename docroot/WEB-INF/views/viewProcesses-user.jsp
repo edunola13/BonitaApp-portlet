@@ -30,7 +30,7 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 					<portlet:actionURL var="startCase" name="startCase">
 						<portlet:param name="processId" value="<%=Long.toString(process.getId()) %>"/>
 					</portlet:actionURL>
-					<a href="<%= startCase%>" class="btn btn-primary"><fmt:message key="iniciarCaso" /></a>
+					<a href="<%= startCase%>" class="btn btn-primary" onclick="return confirm('<fmt:message key="confirm-iniciarCaso" />')"><fmt:message key="iniciarCaso" /></a>
 				</td>
 			</tr>
 		<%} %>

@@ -23,6 +23,7 @@ import bonitaClass.Task;
 @RequestMapping(value = "VIEW")
 public class BonitaTaskController {
 	
+	@SuppressWarnings("deprecation")
 	@RenderMapping()
 	public String view(RenderRequest request, RenderResponse response) throws PortletException, IOException {		
 		long userId= 0;
