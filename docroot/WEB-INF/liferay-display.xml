@@ -4,6 +4,7 @@
 <display>
 	<category name="BonitaIntegration">
 		<portlet id="bonitaApp" />
+		<portlet id="bonitaApp-userArchived" />
 		<portlet id="bonitaApp-adminApps" />
 		<portlet id="bonitaApp-adminOrg" />
 		<portlet id="bonitaApp-task" />
