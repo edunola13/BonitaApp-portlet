@@ -44,7 +44,7 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 						<portlet:actionURL var="deleteProcess" name="deleteProcess">
 							<portlet:param name="processId" value="<%=Long.toString(process.getId()) %>"/>
 						</portlet:actionURL>
-						<a href="<%= deleteProcess%>" class="btn btn-primary"><fmt:message key="eliminar" /></a>
+						<a href="<%= deleteProcess%>" class="btn btn-primary" onclick="return confirm('<fmt:message key="confirm-eliminarProceso" />')"><fmt:message key="eliminar" /></a>
 					<%} %>
 				</td>
 			</tr>

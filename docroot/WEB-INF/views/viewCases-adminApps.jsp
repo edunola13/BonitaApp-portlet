@@ -38,7 +38,7 @@ List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 					<portlet:actionURL var="deleteCase" name="deleteCase">
 						<portlet:param name="caseId" value="<%=Long.toString(caso.getId()) %>"/>
 					</portlet:actionURL>
-					<a href="<%= deleteCase%>" class="btn btn-primary"><fmt:message key="eliminar" /></a>
+					<a href="<%= deleteCase%>" class="btn btn-primary" onclick="return confirm('<fmt:message key="confirm-eliminarCaso" />')"><fmt:message key="eliminar" /></a>
 				</td>
 			</tr>
 		<%} %>
