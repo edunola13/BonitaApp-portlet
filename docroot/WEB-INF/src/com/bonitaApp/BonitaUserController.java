@@ -21,6 +21,8 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import com.BonitaAppBeans.BonitaConfig;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
@@ -87,10 +89,16 @@ public class BonitaUserController {
 	}
 	
 	@ActionMapping(value="updateData")
-	public void updateData(ActionRequest request, ActionResponse response){
+	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{	
+		User currentUser= PortalUtil.getUser(request);
 		BonitaApi bon= new BonitaApi(this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
 		String name= (String)request.getPortletSession().getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE);
-		String pass= (String)request.getPortletSession().getAttribute(WebKeys.USER_PASSWORD ,PortletSession.APPLICATION_SCOPE);
+		String pass= currentUser.getPassword().replace("+", "");
+		if(request.getPortletSession().getAttribute(WebKeys.USER_PASSWORD) != null){
+			//Si la password desencriptada se encuentra, se setea la misma
+			pass= (String)request.getPortletSession().getAttribute(WebKeys.USER_PASSWORD ,PortletSession.APPLICATION_SCOPE);
+		}
+		 System.out.println(pass);
 		bonitaClass.User user= bon.user(name);
 		bon.updateUser(user.getId(), name, pass, pass, user.getFirstName(), user.getLastName(), true);
 		
@@ -207,7 +215,7 @@ public class BonitaUserController {
 		return "formTask-Ajax";
 	}
 	
-	private BonitaApi getBonita(PortletSession portletSession){
+	private BonitaApi getBonita(PortletSession portletSession){		
 		BonitaApi bonita= null;
 		if(portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE) != null){
 			if(portletSession.getAttribute("BONITA_API_PORT", PortletSession.APPLICATION_SCOPE) == null){
