@@ -11,6 +11,7 @@ public class BonitaConfig {
 	private String defaultGroup= "";
 	private String defaultRole= "";
 	private String liferayGroups= "";
+	private String username= "";
 
 	public String getServerUrl() {
 		return serverUrl;
@@ -78,5 +79,13 @@ public class BonitaConfig {
 	
 	public void setLiferayGroups(String groups) {
 		this.liferayGroups = groups;
-	}	
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 }

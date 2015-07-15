@@ -13,9 +13,9 @@
 List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 %>
 
-<jsp:include page="../view-sections/header.jsp"></jsp:include>
+<jsp:include page="../../view-sections/header.jsp"></jsp:include>
 
-<jsp:include page="../view-sections/alert.jsp"></jsp:include>
+<jsp:include page="../../view-sections/alert.jsp"></jsp:include>
 
 <table id="tabla-bonita" class="table table-striped table-bordered table-hover">
 	<thead>
@@ -62,17 +62,19 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 							<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
 						</portlet:actionURL>
 						<a href="<%= releaseId%>" class="btn btn-primary"><fmt:message key="liberar" /></a>
-						<%if(renderRequest.getPreferences().getValue("doTaskAjax", "si").equals("no")){ %>
-							<portlet:actionURL var="doTask" name="doTask">
-								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>							
-							</portlet:actionURL>
-							<a href="<%= doTask%>" class="btn btn-primary"><fmt:message key="realizar" /></a>
-						<%}else{ %>
+												
+						<%if(renderRequest.getPreferences().getValue("doTaskAjax", "true").equals("true")){ %>
 							<portlet:resourceURL var="doTaskAjax" id="doTaskAjax">
 								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>						
 							</portlet:resourceURL>
 							<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax %>')"><fmt:message key="realizar" /></button>
-						<%} %>				
+						<%}else{ %>
+							<portlet:actionURL var="doTask" name="doTask">
+								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>							
+							</portlet:actionURL>
+							<a href="<%= doTask%>" class="btn btn-primary"><fmt:message key="realizar" /></a>							
+						<%} %>
+						
 					</td>
 				<%} %>				
 			</tr>
@@ -93,7 +95,7 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
                        width: "auto",
                        modal: true
                   	},
-                  	title: 'Formulario de Tarea',
+                  	title: 'Task Form',
                   	id:'dotask'
               	});
                       
@@ -107,7 +109,9 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
                     ['liferay-util-window']
                	);
    		});
-   		
+   		//Elimino datos anteriores, en caso de que haya
+   		$("#dotask").find(".modal-body").html("");
+   		$("#dotask").find(".modal-header h3").html("Task Form");
    		$.ajax({
 			url:url,
 			success:function(data){
@@ -120,4 +124,4 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
   	}  
 </aui:script>
 
-<jsp:include page="../view-sections/footer.jsp"></jsp:include>
+<jsp:include page="../../view-sections/footer.jsp"></jsp:include>

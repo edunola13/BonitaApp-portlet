@@ -20,50 +20,48 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
+import com.BonitaAppBeans.BonitaAdministration;
 import com.BonitaAppBeans.BonitaConfig;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.User;
-import com.liferay.portal.util.PortalUtil;
 
-import bonitaApi.BonitaApi;
 import bonitaClass.Case;
 import bonitaClass.Task;
 
 @Controller("UserController")
 @RequestMapping(value = "VIEW")
 public class BonitaUserController {	
-	
 	@Autowired
 	public BonitaConfig config;
+	@Autowired
+	public BonitaAdministration administration;
 	
 	@RenderMapping()
 	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {	
 		String vista= "viewTasks-user";
-		if(this.getBonita(renderRequest.getPortletSession()) == null){
-			vista= "error-no-login";
-		}else if(!this.getBonita(renderRequest.getPortletSession()).getCorrectLogin()){
+		if(this.administration.bonitaApi(renderRequest.getPortletSession()) == null){
+			return "error-no-login";
+		}else if(!this.administration.bonitaApi(renderRequest.getPortletSession()).getCorrectLogin()){
 			PortletURL updateDataActionUrl= renderResponse.createActionURL();
 			updateDataActionUrl.setParameter(ActionRequest.ACTION_NAME,"updateData");
 			renderRequest.setAttribute("updateDataActionUrl", updateDataActionUrl);
-			vista= "error-login";
+			return "error-login";
 		}else{
 			String action= renderRequest.getParameter("action");
 			if(action == null)action="tasks";
 			
-			bonitaClass.User user= this.getBonita(renderRequest.getPortletSession()).actualUser();
+			bonitaClass.User user= this.administration.bonitaApi(renderRequest.getPortletSession()).actualUser();
 			
 			if(action.equals("cases")){
-				List<Case> cases= this.getBonita(renderRequest.getPortletSession()).cases(user.getId(),0,100);
+				List<Case> cases= this.administration.bonitaApi(renderRequest.getPortletSession()).cases(user.getId(),0,100);
 				renderRequest.setAttribute("cases", cases);
 				vista= "viewCases-user";
 			}else if (action.equals("processes")) {
-				List<bonitaClass.Process> processes= this.getBonita(renderRequest.getPortletSession()).deployedProccessForUser(user.getId());
+				List<bonitaClass.Process> processes= this.administration.bonitaApi(renderRequest.getPortletSession()).deployedProccessForUser(user.getId());
 				renderRequest.setAttribute("processes", processes);
 				vista= "viewProcesses-user";
 			}else{
-				List<Task> tasks= this.getBonita(renderRequest.getPortletSession()).tasks(user.getId(),0,100);
+				List<Task> tasks= this.administration.bonitaApi(renderRequest.getPortletSession()).tasks(user.getId(),0,100);
 				renderRequest.setAttribute("tasks", tasks);
 				vista= "viewTasks-user";			
 			}		
@@ -85,22 +83,17 @@ public class BonitaUserController {
 			//Seteo la seccion actual en base al action
 			renderRequest.setAttribute("section", action);
 		}
-		return vista;
+		return "userApp/" + vista;
 	}
 	
 	@ActionMapping(value="updateData")
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{	
-		User currentUser= PortalUtil.getUser(request);
-		BonitaApi bon= new BonitaApi(this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
+		/*BonitaApi bon= new BonitaApi(this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
 		String name= (String)request.getPortletSession().getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE);
-		String pass= currentUser.getPassword().replace("+", "");
-		if(request.getPortletSession().getAttribute(WebKeys.USER_PASSWORD) != null){
-			//Si la password desencriptada se encuentra, se setea la misma
-			pass= (String)request.getPortletSession().getAttribute(WebKeys.USER_PASSWORD ,PortletSession.APPLICATION_SCOPE);
-		}
-		 System.out.println(pass);
+		String pass= (String)request.getPortletSession().getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE);
 		bonitaClass.User user= bon.user(name);
-		bon.updateUser(user.getId(), name, pass, pass, user.getFirstName(), user.getLastName(), true);
+		bon.updateUser(user.getId(), name, pass, pass, user.getFirstName(), user.getLastName(), true);*/
+		this.administration.updateData(request);
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);
 		
@@ -132,7 +125,7 @@ public class BonitaUserController {
 	 */
 	@ActionMapping(value="startCase")
 	public void startCase(ActionRequest request, ActionResponse response, @RequestParam long processId){		
-		Case caso= this.getBonita(request.getPortletSession()).startCase(processId);
+		Case caso= this.administration.bonitaApi(request.getPortletSession()).startCase(processId);
 		if(caso == null){
 			response.setRenderParameter("rtaAction", "error");
 		}else{
@@ -146,8 +139,8 @@ public class BonitaUserController {
 	 */
 	@ActionMapping(value="assignId")
 	public void assignId(ActionRequest request, ActionResponse response, @RequestParam long taskId){
-		bonitaClass.User user= this.getBonita(request.getPortletSession()).actualUser();
-		Boolean exito= this.getBonita(request.getPortletSession()).assignTask(taskId, user.getId());
+		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).assignTask(taskId, user.getId());
 		if(!exito){
 			response.setRenderParameter("rtaAction", "error");
 		}else{
@@ -161,7 +154,7 @@ public class BonitaUserController {
 	 */
 	@ActionMapping(value="releaseId")
 	public void releaseId(ActionRequest request, ActionResponse response, @RequestParam long taskId){
-		Boolean exito= this.getBonita(request.getPortletSession()).releaseTask(taskId);
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).releaseTask(taskId);
 		if(!exito){
 			response.setRenderParameter("rtaAction", "error");
 		}else{
@@ -178,7 +171,7 @@ public class BonitaUserController {
 	 */
 	@ActionMapping(value="doTask")
 	public void doTask(ActionRequest request, ActionResponse response, @RequestParam long taskId){	
-		bonitaClass.User user= this.getBonita(request.getPortletSession()).actualUser();
+		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
 		
 		QName qName= new QName("http://BontaAppLiferay.com", "doTask", "x");
 		response.setEvent(qName, Long.toString(user.getId()) + "-" + Long.toString(taskId));
@@ -186,41 +179,35 @@ public class BonitaUserController {
 		response.setRenderParameter("action", "tasks");
 	}
 	
-	@SuppressWarnings("deprecation")
 	@ResourceMapping(value="doTaskAjax")
-	public String doTaskAjax(ResourceRequest request,ResourceResponse response, @RequestParam long taskId){	
-		bonitaClass.User user= this.getBonita(request.getPortletSession()).actualUser();
+	public String doTaskAjax(ResourceRequest request,ResourceResponse response, @RequestParam long taskId){
 		
-		Task task= this.getBonita(request.getPortletSession()).task(user.getId(), taskId);
+		Task task= this.administration.bonitaApi(request.getPortletSession()).task(taskId);
 		if(task != null && task.getState().equals("ready")){
 			request.setAttribute("estado", true);
 			request.setAttribute("task", task);
+			
 			//String url= his.config.getServerUrl() + "?ui=form#form="+ task.getProcess().getName() +"--6.0--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form&locale=default";
 			String url= this.config.getServerUrl() + "/loginservice?redirectUrl=/bonita/portal/homepage?ui=form&amp;ui=form&amp;locale=default#form="+ task.getProcess().getName() +"--"+task.getProcess().getVersion()+"--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form";
 			request.setAttribute("url", url);
 			
-			String password= (String) (request.getPortletSession().getAttribute(WebKeys.USER_PASSWORD ,PortletSession.APPLICATION_SCOPE));
+			String password= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));
+			String username= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE));
 			request.setAttribute("password", password);
-			try {
-				User currentUser= PortalUtil.getUser(request);
-				request.setAttribute("userName", currentUser.getScreenName());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			request.setAttribute("userName", username);
 		}else{
 			request.setAttribute("estado", false);
 		}
 		
-		return "formTask-Ajax";
+		return "userApp/formTask-Ajax";
 	}
 	
-	private BonitaApi getBonita(PortletSession portletSession){		
+	/*private BonitaApi getBonita(PortletSession portletSession){		
 		BonitaApi bonita= null;
 		if(portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE) != null){
 			if(portletSession.getAttribute("BONITA_API_PORT", PortletSession.APPLICATION_SCOPE) == null){
 				String userName= (String) (portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE));
-				String password= (String) (portletSession.getAttribute(WebKeys.USER_PASSWORD ,PortletSession.APPLICATION_SCOPE));						
+				String password= (String) (portletSession.getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));						
 				bonita= new BonitaApi(this.config.getServerUrl(), userName, password);
 				portletSession.setAttribute("BONITA_API_PORT", bonita, PortletSession.APPLICATION_SCOPE);
 			}else{
@@ -228,5 +215,5 @@ public class BonitaUserController {
 			}
 		}
 		return bonita;
-	}
+	}*/
 }

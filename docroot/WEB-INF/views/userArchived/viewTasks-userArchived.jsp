@@ -12,9 +12,9 @@
 List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 %>
 
-<jsp:include page="../view-sections/header-userArchived.jsp"></jsp:include>
+<jsp:include page="../../view-sections/header-userArchived.jsp"></jsp:include>
 
-<jsp:include page="../view-sections/alert.jsp"></jsp:include>
+<jsp:include page="../../view-sections/alert.jsp"></jsp:include>
 
 <table id="tabla-bonita-userArchived" class="table table-striped table-bordered table-hover">
 	<thead>
@@ -43,4 +43,4 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 	</tbody>	
 </table>
 
-<jsp:include page="../view-sections/footer-userArchived.jsp"></jsp:include>
+<jsp:include page="../../view-sections/footer-userArchived.jsp"></jsp:include>

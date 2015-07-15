@@ -22,9 +22,10 @@
 		<property name="defaultGroup"><value>${defaultGroup}</value></property>
 		<property name="defaultRole"><value>${defaultRole}</value></property>
 		<property name="liferayGroups"><value>${liferayGroups}</value></property>
+		<property name="username"><value>${username}</value></property>
 	</bean>
-        		
-<!--        <bean id="bonitaConfig" class="com.BonitaAppBeans.BonitaConfig"> -->
-<!-- 			<property name="serverUrl" value="http://server200364b:8080/bonita/"></property> -->
-<!-- 	 	</bean> 		 -->
+	
+	<bean id="bonitaAdministration" class="com.BonitaAppBeans.BonitaAdministration">
+		<property name="config" ref="bonitaConfig"></property>
+	 </bean> 		
 </beans>

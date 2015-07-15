@@ -11,11 +11,11 @@
 List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 %>
 
-<jsp:include page="../view-sections/header-userArchived.jsp"></jsp:include>
+<jsp:include page="../../view-sections/header.jsp"></jsp:include>
 
-<jsp:include page="../view-sections/alert.jsp"></jsp:include>
+<jsp:include page="../../view-sections/alert.jsp"></jsp:include>
 
-<table id="tabla-bonita-userArchived" class="table table-striped table-bordered table-hover">
+<table id="tabla-bonita" class="table table-striped table-bordered table-hover">
 	<thead>
 		<tr>
 			<th>Id</th>
@@ -23,7 +23,6 @@ List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 			<th><fmt:message key="estado" /></th>
 			<th><fmt:message key="iniciado-por" /></th>
 			<th><fmt:message key="iniciado" /></th>
-			<th><fmt:message key="finalizado"/></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -34,10 +33,9 @@ List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 				<td><%=caso.getState() %></td>
 				<td><%=caso.getStartedBy() %></td>
 				<td><%=caso.getBeginDateString() %></td>
-				<td><%=caso.getEndDateString() %></td>
 			</tr>
 		<%} %>
 	</tbody>
 </table>
 
-<jsp:include page="../view-sections/footer-userArchived.jsp"></jsp:include>
+<jsp:include page="../../view-sections/footer.jsp"></jsp:include>

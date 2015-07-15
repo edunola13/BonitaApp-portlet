@@ -9,9 +9,9 @@
 List<User> users= (List<User>)renderRequest.getAttribute("users");
 %>
 
-<jsp:include page="../view-sections/header-adminOrg.jsp"></jsp:include>
+<jsp:include page="../../view-sections/header-adminOrg.jsp"></jsp:include>
 
-<jsp:include page="../view-sections/alert.jsp"></jsp:include>
+<jsp:include page="../../view-sections/alert.jsp"></jsp:include>
 
 <table id="tabla-bonita-adminOrg" class="table table-striped table-bordered table-hover">
 	<thead>
@@ -53,4 +53,4 @@ List<User> users= (List<User>)renderRequest.getAttribute("users");
 	</tbody>
 </table>
 
-<jsp:include page="../view-sections/footer-adminOrg.jsp"></jsp:include>
+<jsp:include page="../../view-sections/footer-adminOrg.jsp"></jsp:include>

@@ -10,7 +10,11 @@
 			<name>contextConfigLocation</name>
 			<value>/WEB-INF/config/springConfig-user.xml</value>
 		</init-param>
-		
+		<init-param>
+        	<name>config-template</name>
+        	<value>/WEB-INF/views/preferences/configuration.jsp</value>
+    	</init-param>
+    	
 		<expiration-cache>0</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>

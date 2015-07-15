@@ -14,6 +14,7 @@ import bonitaClass.Group;
 import bonitaClass.Membership;
 import bonitaClass.Role;
 
+import com.BonitaAppBeans.BonitaAdministration;
 import com.BonitaAppBeans.BonitaConfig;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -43,21 +44,37 @@ public class LoginActionPost  extends Action {
 			}
 			
 			if(isUserBonita){ 
+				System.out.println("## Usuario de Bonita");
 				HttpSession session= req.getSession();
 	        	
-				if(session.getAttribute(WebKeys.USER_PASSWORD) == null){
-					currentUser.getPassword().replace("+", "");
+				//Seteo los datos del usuario en la Sesion
+				//Veo si se encuentra la contraseña en la sesion, si no guardo la encriptada
+				String password= (String) session.getAttribute(WebKeys.USER_PASSWORD);
+				if(password == null){
 					//Si la password desencriptada no se encuentra, se setea la password encriptada
-					session.setAttribute(WebKeys.USER_PASSWORD, currentUser.getPassword().replace("+", ""));
-				}				
-				session.setAttribute("BONITA_APP_USER_NAME", currentUser.getScreenName());
+					password= BonitaAdministration.adaptEncryptedPassword(currentUser.getPassword());					
+				}
+				session.setAttribute("BONITA_APP_USER_PASS", password);
 				
+				String username= "";
+				if(this.config.getUsername().equals("ScreenName")){
+					username= currentUser.getScreenName();					
+				}else{
+					username= Long.toString(currentUser.getUserId());
+				}
+				session.setAttribute("BONITA_APP_USER_NAME", username);
+				
+				//Instanciamos BonitaApi
 				BonitaApi bonita= new BonitaApi(this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
+				if(!bonita.getCorrectLogin()){
+					throw new Exception("Los datos de Configuración son Invalidos");
+				}
+				
 				//Buscamos si existe el usuario
-				bonitaClass.User user= bonita.user(currentUser.getScreenName());
+				bonitaClass.User user= bonita.user(username);
 				if(user == null){
 					System.out.println("## Creando el Usuario"); 
-					user= bonita.createUser(currentUser.getScreenName(), (String)session.getAttribute(WebKeys.USER_PASSWORD), (String)session.getAttribute(WebKeys.USER_PASSWORD), currentUser.getFirstName(), currentUser.getLastName());
+					user= bonita.createUser(username, password, password, currentUser.getFirstName(), currentUser.getLastName());
 					Group group= bonita.group(this.config.getDefaultGroup());
 					Role role= bonita.role(this.config.getDefaultRole());
 					bonita.addMembership(user.getId(), role.getId(), group.getId());
@@ -111,6 +128,7 @@ public class LoginActionPost  extends Action {
 			this.config.setDefaultGroup(prop.getProperty("defaultGroup"));
 			this.config.setDefaultRole(prop.getProperty("defaultRole"));
 			this.config.setLiferayGroups(prop.getProperty("liferayGroups"));
+			this.config.setUsername(prop.getProperty("username"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}    

@@ -5,6 +5,7 @@
 	<portlet>
 		<portlet-name>bonitaApp</portlet-name>
 		<icon>/icon.png</icon>
+		<configuration-action-class>com.bonitaApp.ConfigurationActionImpl</configuration-action-class>
 		<private-session-attributes>false</private-session-attributes>
 		<footer-portlet-javascript>/js/jquery.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/jquery.dataTables.js</footer-portlet-javascript>		

@@ -13,9 +13,9 @@
 List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 %>
 
-<jsp:include page="../view-sections/header.jsp"></jsp:include>
+<jsp:include page="../../view-sections/header.jsp"></jsp:include>
 
-<jsp:include page="../view-sections/alert.jsp"></jsp:include>
+<jsp:include page="../../view-sections/alert.jsp"></jsp:include>
 
 <table id="tabla-bonita-adminApps" class="table table-striped table-bordered table-hover">
 	<thead>
@@ -82,7 +82,7 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
                        width: "400",
                        modal: true
                   	},
-                  	title: 'Asignar Tarea',
+                  	title: 'Assign Task',
                   	id:'assigntask'
               	});
                       
@@ -96,7 +96,9 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
                     ['liferay-util-window']
                	);
    		});
-   		
+   		//Elimino datos anteriores, en caso de que haya
+   		$("#assigntask").find(".modal-body").html("");
+   		$("#assigntask").find(".modal-header h3").html("Assign Task");
    		$.ajax({
 			url:url,
 			success:function(data){
@@ -109,4 +111,4 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
   	}  
 </aui:script>
 
-<jsp:include page="../view-sections/footer-adminApps.jsp"></jsp:include>
+<jsp:include page="../../view-sections/footer-adminApps.jsp"></jsp:include>

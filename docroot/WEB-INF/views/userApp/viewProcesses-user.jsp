@@ -9,9 +9,9 @@
 List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 %>
 
-<jsp:include page="../view-sections/header.jsp"></jsp:include>
+<jsp:include page="../../view-sections/header.jsp"></jsp:include>
 
-<jsp:include page="../view-sections/alert.jsp"></jsp:include>
+<jsp:include page="../../view-sections/alert.jsp"></jsp:include>
 
 <table id="tabla-bonita" class="table table-striped table-bordered table-hover">
 	<thead>
@@ -37,4 +37,4 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 	</tbody>
 </table>
 
-<jsp:include page="../view-sections/footer.jsp"></jsp:include>
+<jsp:include page="../../view-sections/footer.jsp"></jsp:include>
