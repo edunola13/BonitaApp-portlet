@@ -15,14 +15,12 @@
 
 <%
 boolean title = GetterUtil.getBoolean(portletPreferences.getValue("title", StringPool.FALSE));
-boolean doTaskAjax = GetterUtil.getBoolean(portletPreferences.getValue("doTaskAjax", StringPool.TRUE));
 %>
 
 <aui:form action="<%= configurationURL %>" method="post" name="fm">
     <aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 
-	<aui:input label="Show Title" name="preferences--title--" type="checkbox" value="<%= title %>" />
-    <aui:input label="Task Form - Pop Up" name="preferences--doTaskAjax--" type="checkbox" value="<%= doTaskAjax %>" />
+    <aui:input label="Show Title" name="preferences--title--" type="checkbox" value="<%= title %>" />
 
     <aui:button-row>
        <aui:button type="submit" />

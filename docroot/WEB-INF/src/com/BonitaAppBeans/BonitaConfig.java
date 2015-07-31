@@ -1,9 +1,11 @@
 package com.BonitaAppBeans;
 
-import org.springframework.stereotype.Service;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
 
-@Service
+//@Service - Usado cuando se inyectaba
 public class BonitaConfig {
+	private String version= "6.2";
 	private String serverUrl= "http://localhost:8080/bonita/";
 	private String userAdmin= "admin";
 	private String passAdmin= "";
@@ -12,6 +14,31 @@ public class BonitaConfig {
 	private String defaultRole= "";
 	private String liferayGroups= "";
 	private String username= "";
+
+	public BonitaConfig(){
+		
+	}
+	
+	public BonitaConfig(long companyId) throws SystemException{
+		this.version  = PrefsPropsUtil.getString(companyId, "bonita.version");
+		this.serverUrl  = PrefsPropsUtil.getString(companyId, "bonita.serverUrl");
+		this.userAdmin  = PrefsPropsUtil.getString(companyId, "bonita.userAdmin");
+		this.passAdmin  = PrefsPropsUtil.getString(companyId, "bonita.passAdmin");
+		this.adminProfile  = PrefsPropsUtil.getString(companyId, "bonita.adminProfile");
+		this.defaultGroup  = PrefsPropsUtil.getString(companyId, "bonita.defaultGroup");
+		this.defaultRole  = PrefsPropsUtil.getString(companyId, "bonita.defaultRole");
+		this.liferayGroups  = PrefsPropsUtil.getString(companyId, "bonita.liferayGroups");
+		this.username  = PrefsPropsUtil.getString(companyId, "bonita.username");
+	}
+	
+	
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
 	public String getServerUrl() {
 		return serverUrl;

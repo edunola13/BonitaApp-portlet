@@ -2,6 +2,7 @@ package com.BonitaAppBeans;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletSession;
+import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -16,6 +17,10 @@ public class BonitaAdministration {
 	
 	private BonitaConfig config;
 	
+	public BonitaAdministration(HttpServletRequest request) throws SystemException{
+		this.config= new BonitaConfig(PortalUtil.getCompanyId(request));
+	}
+	
 	public BonitaApi bonitaApi(PortletSession portletSession){
 		BonitaApi bonita= null;
 		if(portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE) != null){
@@ -23,7 +28,7 @@ public class BonitaAdministration {
 				System.out.println("## Creando Bonita Api para Sesion");
 				String userName= (String) (portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE));
 				String password= (String) (portletSession.getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));						
-				bonita= new BonitaApi(this.config.getServerUrl(), userName, password);
+				bonita= new BonitaApi(this.config.getVersion(), this.config.getServerUrl(), userName, password);
 				portletSession.setAttribute("BONITA_API_PORT", bonita, PortletSession.APPLICATION_SCOPE);
 			}else{
 				bonita= (BonitaApi) portletSession.getAttribute("BONITA_API_PORT", PortletSession.APPLICATION_SCOPE);
@@ -45,7 +50,7 @@ public class BonitaAdministration {
 	}
 	
 	public Boolean updateData(ActionRequest request) throws PortalException, SystemException{
-		BonitaApi bon= new BonitaApi(this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
+		BonitaApi bon= new BonitaApi(this.config.getVersion(), this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
 		
 		String name= (String)request.getPortletSession().getAttribute("BONITA_APP_USER_NAME",PortletSession.APPLICATION_SCOPE);
 		bonitaClass.User user= bon.user(name);

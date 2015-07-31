@@ -11,7 +11,6 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,17 +25,22 @@ import com.BonitaAppBeans.BonitaAdministration;
 import com.BonitaAppBeans.BonitaConfig;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.util.PortalUtil;
 
 @Controller("AdminApps")
 @RequestMapping(value = "VIEW")
 public class BonitaAdminApps {
-	@Autowired
+	//@Autowired
 	public BonitaConfig config;
-	@Autowired
+	//@Autowired
 	public BonitaAdministration administration;
 	
 	@RenderMapping()
-	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {	
+	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
+		
 		String vista= "viewTasks-adminApps";
 		if(this.administration.bonitaApi(renderRequest.getPortletSession()) == null){
 			return "error-no-login";
@@ -87,6 +91,8 @@ public class BonitaAdminApps {
 	
 	@ActionMapping(value="updateData")
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		this.administration.updateData(request);
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);
@@ -111,9 +117,12 @@ public class BonitaAdminApps {
 	
 	/**
 	 * Formulario para asignar tarea
+	 * @throws SystemException 
 	 */
 	@ResourceMapping(value="assignTask")
-	public String assignTask(ResourceRequest request,ResourceResponse response, @RequestParam long taskId){
+	public String assignTask(ResourceRequest request,ResourceResponse response, @RequestParam long taskId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		request.setAttribute("task", this.administration.bonitaApi(request.getPortletSession()).task(taskId));
 		request.setAttribute("users", this.administration.bonitaApi(request.getPortletSession()).users(0, 100000));
 		return "adminApp/assignTask-admin";
@@ -121,84 +130,102 @@ public class BonitaAdminApps {
 	
 	/**
 	 * Asignar Tarea
+	 * @throws SystemException 
 	 */
 	@ActionMapping(value="assignId")
-	public void assignId(ActionRequest request, ActionResponse response){
+	public void assignId(ActionRequest request, ActionResponse response) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).assignTask(Long.parseLong(request.getParameter("taskId")), Long.parseLong(request.getParameter("userId")));
 		if(!exito){
-			response.setRenderParameter("rtaAction", "error");
+			SessionErrors.add(request, "error");
 		}else{
-			response.setRenderParameter("rtaAction", "success");
+			SessionMessages.add(request, "success");
 		}
 		response.setRenderParameter("action", "tasks");
 	}
 	
 	/**
 	 * Liberar Tarea
+	 * @throws SystemException 
 	 */
 	@ActionMapping(value="releaseId")
-	public void releaseId(ActionRequest request, ActionResponse response, @RequestParam long taskId){
+	public void releaseId(ActionRequest request, ActionResponse response, @RequestParam long taskId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).releaseTask(taskId);
 		if(!exito){
-			response.setRenderParameter("rtaAction", "error");
+			SessionErrors.add(request, "error");
 		}else{
-			response.setRenderParameter("rtaAction", "success");
+			SessionMessages.add(request, "success");
 		}
 		response.setRenderParameter("action", "tasks");
 	}
 	
 	/**
 	 * Eliminar Case
+	 * @throws SystemException 
 	 */
 	@ActionMapping(value="deleteCase")
-	public void deleteCase(ActionRequest request, ActionResponse response, @RequestParam long caseId){
+	public void deleteCase(ActionRequest request, ActionResponse response, @RequestParam long caseId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deleteCase(caseId);
 		if(!exito){
-			response.setRenderParameter("rtaAction", "error");
+			SessionErrors.add(request, "error");
 		}else{
-			response.setRenderParameter("rtaAction", "success");
+			SessionMessages.add(request, "success");
 		}
 		response.setRenderParameter("action", "cases");
 	}
 	
 	/**
 	 * Deshabilitar Process
+	 * @throws SystemException 
 	 */
 	@ActionMapping(value="disableProcess")
-	public void disableProcess(ActionRequest request, ActionResponse response, @RequestParam long processId){
+	public void disableProcess(ActionRequest request, ActionResponse response, @RequestParam long processId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).disableProcess(processId);
 		if(!exito){
-			response.setRenderParameter("rtaAction", "error");
+			SessionErrors.add(request, "error");
 		}else{
-			response.setRenderParameter("rtaAction", "success");
+			SessionMessages.add(request, "success");
 		}
 		response.setRenderParameter("action", "processes");
 	}
 	
 	/**
 	 * Habilitar Process
+	 * @throws SystemException 
 	 */
 	@ActionMapping(value="enableProcess")
-	public void enableProcess(ActionRequest request, ActionResponse response, @RequestParam long processId){
+	public void enableProcess(ActionRequest request, ActionResponse response, @RequestParam long processId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).enableProcess(processId);
 		if(!exito){
-			response.setRenderParameter("rtaAction", "error");
+			SessionErrors.add(request, "error");
 		}else{
-			response.setRenderParameter("rtaAction", "success");
+			SessionMessages.add(request, "success");
 		}
 		response.setRenderParameter("action", "processes");
 	}
 	
 	/**
 	 * Eliminar Process
+	 * @throws SystemException 
 	 */
 	@ActionMapping(value="deleteProcess")
-	public void deleteProcess(ActionRequest request, ActionResponse response, @RequestParam long processId){
+	public void deleteProcess(ActionRequest request, ActionResponse response, @RequestParam long processId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deleteProcess(processId);
 		if(!exito){
-			response.setRenderParameter("rtaAction", "error");
+			SessionErrors.add(request, "error");
 		}else{
-			response.setRenderParameter("rtaAction", "success");
+			SessionMessages.add(request, "success");
 		}
 		response.setRenderParameter("action", "processes");
 	}

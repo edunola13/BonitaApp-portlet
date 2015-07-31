@@ -26,10 +26,12 @@ public class LoginActionPost  extends Action {
 	private BonitaConfig config;	
 	
     public void run(HttpServletRequest req, HttpServletResponse res){
-        System.out.println("## Custom Login Bonita App - Liferay");      	
-        this.setBonitaConfig();
+        System.out.println("## Custom Login Bonita App - Liferay");        
         
         try {			
+        	//this.setBonitaConfig();
+            this.config= new BonitaConfig(PortalUtil.getCompanyId(req));
+        	
         	System.out.println(this.config.getServerUrl());
         	
         	User currentUser= PortalUtil.getUser(req);
@@ -65,7 +67,7 @@ public class LoginActionPost  extends Action {
 				session.setAttribute("BONITA_APP_USER_NAME", username);
 				
 				//Instanciamos BonitaApi
-				BonitaApi bonita= new BonitaApi(this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
+				BonitaApi bonita= new BonitaApi(this.config.getVersion(), this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
 				if(!bonita.getCorrectLogin()){
 					throw new Exception("Los datos de Configuración son Invalidos");
 				}
@@ -104,6 +106,10 @@ public class LoginActionPost  extends Action {
 		}
     }
 
+    /**
+     * Crea BonitaConfig leyendo los datos desde bonitaconfig.properties
+     * @deprecated
+     */
     private void setBonitaConfig(){
     	//load a properties file
     	try {
@@ -121,6 +127,7 @@ public class LoginActionPost  extends Action {
 			prop.load(input);
 			
 			this.config= new BonitaConfig();
+			this.config.setVersion(prop.getProperty("version"));
 			this.config.setServerUrl(prop.getProperty("serverUrl"));
 			this.config.setUserAdmin(prop.getProperty("userAdmin"));
 			this.config.setPassAdmin(prop.getProperty("passAdmin"));

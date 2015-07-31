@@ -9,7 +9,6 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,17 +23,22 @@ import com.BonitaAppBeans.BonitaAdministration;
 import com.BonitaAppBeans.BonitaConfig;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.util.PortalUtil;
 
 @Controller("AdminOrg")
 @RequestMapping(value = "VIEW")
 public class BonitaAdminOrg {
-	@Autowired
+	//@Autowired
 	public BonitaConfig config;
-	@Autowired
+	//@Autowired
 	public BonitaAdministration administration;
 	
 	@RenderMapping()
-	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {	
+	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
+		
 		String vista= "viewUsers-adminOrg";
 		if(this.administration.bonitaApi(renderRequest.getPortletSession()) == null){
 			return "error-no-login";
@@ -85,11 +89,13 @@ public class BonitaAdminOrg {
 	
 	@ActionMapping(value="updateData")
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		this.administration.updateData(request);
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);
 		
-		response.setRenderParameter("action", "tasks");
+		response.setRenderParameter("action", "users");
 	}
 	
 	@ActionMapping(value="users")
@@ -109,30 +115,36 @@ public class BonitaAdminOrg {
 	
 	/**
 	 * Desactivar Usuario
+	 * @throws SystemException 
 	 */
 	@ActionMapping(value="deactivateUser")
-	public void deactivateUser(ActionRequest request, ActionResponse response, @RequestParam long userId){
+	public void deactivateUser(ActionRequest request, ActionResponse response, @RequestParam long userId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deactivateUser(userId);
 		if(!exito){
-			response.setRenderParameter("rtaAction", "error");
+			SessionErrors.add(request, "error");
 		}else{
-			response.setRenderParameter("rtaAction", "success");
+			SessionMessages.add(request, "success");
 		}
-		response.setRenderParameter("action", "tasks");
+		response.setRenderParameter("action", "users");
 	}
 	
 	/**
 	 * Activar Usuario
+	 * @throws SystemException 
 	 */
 	@ActionMapping(value="activateUser")
-	public void activateUser(ActionRequest request, ActionResponse response, @RequestParam long userId){
+	public void activateUser(ActionRequest request, ActionResponse response, @RequestParam long userId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).activeUser(userId);
 		if(!exito){
-			response.setRenderParameter("rtaAction", "error");
+			SessionErrors.add(request, "error");
 		}else{
-			response.setRenderParameter("rtaAction", "success");
+			SessionMessages.add(request, "success");
 		}
-		response.setRenderParameter("action", "tasks");
+		response.setRenderParameter("action", "users");
 	}
 	
 }

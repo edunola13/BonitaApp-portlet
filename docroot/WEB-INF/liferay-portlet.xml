@@ -14,6 +14,7 @@
 	<portlet>
 		<portlet-name>bonitaApp-userArchived</portlet-name>
 		<icon>/icon.png</icon>
+		<configuration-action-class>com.bonitaAppUserArchived.ConfigurationActionImpl</configuration-action-class>
 		<private-session-attributes>false</private-session-attributes>
 		<footer-portlet-javascript>/js/jquery.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/jquery.dataTables.js</footer-portlet-javascript>		
@@ -22,6 +23,7 @@
 	<portlet>
 		<portlet-name>bonitaApp-adminApps</portlet-name>
 		<icon>/icon.png</icon>
+		<configuration-action-class>com.bonitaAppAdminApps.ConfigurationActionImpl</configuration-action-class>
 		<private-session-attributes>false</private-session-attributes>
 		<footer-portlet-javascript>/js/jquery.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/jquery.dataTables.js</footer-portlet-javascript>		
@@ -30,6 +32,7 @@
 	<portlet>
 		<portlet-name>bonitaApp-adminOrg</portlet-name>
 		<icon>/icon.png</icon>
+		<configuration-action-class>com.bonitaAppAdminOrg.ConfigurationActionImpl</configuration-action-class>
 		<private-session-attributes>false</private-session-attributes>
 		<footer-portlet-javascript>/js/jquery.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/jquery.dataTables.js</footer-portlet-javascript>		
@@ -41,6 +44,7 @@
 		<private-session-attributes>false</private-session-attributes>
 		<css-class-wrapper>bonitaApp-portlet</css-class-wrapper>
 	</portlet>
+	
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

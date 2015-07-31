@@ -9,7 +9,6 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
@@ -22,17 +21,20 @@ import com.BonitaAppBeans.BonitaAdministration;
 import com.BonitaAppBeans.BonitaConfig;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 @Controller("UserArchived")
 @RequestMapping(value = "VIEW")
 public class BonitaAdminUserArchived {
-	@Autowired
+	//@Autowired
 	public BonitaConfig config;
-	@Autowired
+	//@Autowired
 	public BonitaAdministration administration;
 	
 	@RenderMapping()
 	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {	
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
+		
 		String vista= "viewTasks-userArchived";
 		if(this.administration.bonitaApi(renderRequest.getPortletSession()) == null){
 			return "error-no-login";
@@ -76,6 +78,8 @@ public class BonitaAdminUserArchived {
 	
 	@ActionMapping(value="updateData")
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		this.administration.updateData(request);
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);

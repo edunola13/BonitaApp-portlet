@@ -7,6 +7,10 @@
 <portlet:actionURL var="update" name="updateData">
 </portlet:actionURL>
 
+<%if(portletPreferences.getValue("title", "false").equals("true")){ %>
+<h3><fmt:message key="tituloUsuario" /></h3>
+<%} %>
+
 <%String section= (String)renderRequest.getAttribute("section"); %>
 <ul class="nav nav-tabs">
 	<li class="<%=((section.equals("tasks")) ? "active":"")%>"><a href="<%= renderRequest.getAttribute("tasksActionUrl")%>"><fmt:message key="tareas" /></a></li>

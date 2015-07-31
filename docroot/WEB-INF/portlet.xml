@@ -51,6 +51,10 @@
 			<name>contextConfigLocation</name>
 			<value>/WEB-INF/config/springConfig-userArchived.xml</value>
 		</init-param>
+		<init-param>
+        	<name>config-template</name>
+        	<value>/WEB-INF/views/preferences/configuration-basic.jsp</value>
+    	</init-param>
 		
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -85,6 +89,10 @@
 			<name>contextConfigLocation</name>
 			<value>/WEB-INF/config/springConfig-adminApps.xml</value>
 		</init-param>
+		<init-param>
+        	<name>config-template</name>
+        	<value>/WEB-INF/views/preferences/configuration-basic.jsp</value>
+    	</init-param>
 		
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -119,6 +127,10 @@
 			<name>contextConfigLocation</name>
 			<value>/WEB-INF/config/springConfig-adminOrg.xml</value>
 		</init-param>
+		<init-param>
+        	<name>config-template</name>
+        	<value>/WEB-INF/views/preferences/configuration-basic.jsp</value>
+    	</init-param>
 		
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -181,8 +193,41 @@
         </supported-processing-event>
 	</portlet>
 	
+	<portlet>
+		<portlet-name>config-bonita</portlet-name>
+		<display-name>Config Bonita</display-name>
+		<portlet-class>com.bonitaAppConfig.ConfigBonita</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/configbonita/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Config Bonita</title>
+			<short-title>Config Bonita</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 	<event-definition xmlns:x='http://BontaAppLiferay.com'>
     	<qname>x:doTask</qname>
         <value-type>bonitaClass.Task</value-type>
     </event-definition>
+
+
 </portlet-app>

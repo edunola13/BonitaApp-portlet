@@ -9,7 +9,6 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.EventMapping;
@@ -17,19 +16,23 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.BonitaAppBeans.BonitaAdministration;
 import com.BonitaAppBeans.BonitaConfig;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 import bonitaClass.Task;
 
 @Controller("TaskController")
 @RequestMapping(value = "VIEW")
 public class BonitaTaskController {
-	@Autowired
+	//@Autowired
 	public BonitaConfig config;
-	@Autowired
+	//@Autowired
 	public BonitaAdministration administration;
 	
 	@RenderMapping()
-	public String view(RenderRequest request, RenderResponse response) throws PortletException, IOException {		
+	public String view(RenderRequest request, RenderResponse response) throws PortletException, IOException, SystemException {
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
 		long userId= 0;
 		if(request.getParameter("userId") != null)userId= Long.parseLong(request.getParameter("userId"));
 		long taskId= 0;
@@ -42,7 +45,7 @@ public class BonitaTaskController {
 				request.setAttribute("task", task);
 				
 				//String url= "http://localhost:8080/bonita?ui=form#form="+ task.getProcess().getName() +"--6.0--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form&locale=default";
-				String url= this.config.getServerUrl() + "/loginservice?redirectUrl=/bonita/portal/homepage?ui=form&amp;ui=form&amp;locale=default#form="+ task.getProcess().getName() +"--"+task.getProcess().getVersion()+"--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form";
+				String url= this.administration.getConfig().getServerUrl() + "loginservice?redirectUrl=/bonita/portal/homepage?ui=form&amp;ui=form&amp;locale=default#form="+ task.getProcess().getName() +"--"+task.getProcess().getVersion()+"--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form";
 				request.setAttribute("url", url);
 				
 				String password= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));
