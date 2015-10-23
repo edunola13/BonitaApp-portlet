@@ -19,8 +19,7 @@ import bonitaClass.Group;
 import bonitaClass.Role;
 import bonitaClass.User;
 
-import com.BonitaAppBeans.BonitaAdministration;
-import com.BonitaAppBeans.BonitaConfig;
+import com.bonitaAppBeans.BonitaAdministration;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -31,7 +30,7 @@ import com.liferay.portal.util.PortalUtil;
 @RequestMapping(value = "VIEW")
 public class BonitaAdminOrg {
 	//@Autowired
-	public BonitaConfig config;
+	//public BonitaConfig config;
 	//@Autowired
 	public BonitaAdministration administration;
 	

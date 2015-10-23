@@ -17,8 +17,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import bonitaClass.Case;
 import bonitaClass.Task;
 
-import com.BonitaAppBeans.BonitaAdministration;
-import com.BonitaAppBeans.BonitaConfig;
+import com.bonitaAppBeans.BonitaAdministration;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
@@ -27,7 +26,7 @@ import com.liferay.portal.util.PortalUtil;
 @RequestMapping(value = "VIEW")
 public class BonitaAdminUserArchived {
 	//@Autowired
-	public BonitaConfig config;
+	//public BonitaConfig config;
 	//@Autowired
 	public BonitaAdministration administration;
 	

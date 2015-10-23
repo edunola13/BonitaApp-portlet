@@ -14,8 +14,8 @@ import bonitaClass.Group;
 import bonitaClass.Membership;
 import bonitaClass.Role;
 
-import com.BonitaAppBeans.BonitaAdministration;
-import com.BonitaAppBeans.BonitaConfig;
+import com.bonitaAppBeans.BonitaAdministration;
+import com.bonitaAppBeans.BonitaConfig;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -110,7 +110,8 @@ public class LoginActionPost  extends Action {
      * Crea BonitaConfig leyendo los datos desde bonitaconfig.properties
      * @deprecated
      */
-    private void setBonitaConfig(){
+    @SuppressWarnings("unused")
+	private void setBonitaConfig(){
     	//load a properties file
     	try {
     		Properties prop = new Properties();

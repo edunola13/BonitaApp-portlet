@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.EventMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import com.BonitaAppBeans.BonitaAdministration;
-import com.BonitaAppBeans.BonitaConfig;
+import com.bonitaAppBeans.BonitaAdministration;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
@@ -25,7 +24,7 @@ import bonitaClass.Task;
 @RequestMapping(value = "VIEW")
 public class BonitaTaskController {
 	//@Autowired
-	public BonitaConfig config;
+	//public BonitaConfig config;
 	//@Autowired
 	public BonitaAdministration administration;
 	
