@@ -1,4 +1,4 @@
-package com.BonitaAppBeans;
+package com.bonitaAppBeans;
 
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;

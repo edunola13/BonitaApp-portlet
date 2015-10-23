@@ -1,4 +1,4 @@
-package com.BonitaAppBeans;
+package com.bonitaAppBeans;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletSession;
