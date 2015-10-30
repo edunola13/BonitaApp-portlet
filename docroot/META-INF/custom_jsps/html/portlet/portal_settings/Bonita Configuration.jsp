@@ -13,7 +13,7 @@
  *
  */
 --%>
-<%@page import="com.BonitaAppBeans.*" %>
+<%@page import="com.bonitaAppBeans.*" %>
 <%@ include file="/html/portlet/portal_settings/init.jsp" %>
 
 <liferay-ui:error-marker key="errorSection" value="Bonita configuration" />
