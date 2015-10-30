@@ -58,7 +58,7 @@ public class BonitaAdministration {
 		//Consigo los datos actuales de Liferay
 		User currentUser= PortalUtil.getUser(request);
 		
-		//Veo si se encuentra la contraseña en la sesion, si no guardo la encriptada
+		//Veo si se encuentra la contraseï¿½a en la sesion, si no guardo la encriptada
 		String password= (String) request.getPortletSession().getAttribute(WebKeys.USER_PASSWORD, PortletSession.APPLICATION_SCOPE);
 		if(password == null){
 			//Si la password desencriptada no se encuentra, se setea la password encriptada
