@@ -83,6 +83,10 @@ public class LoginActionPost  extends Action {
 					System.out.println("## Usuario Creado"); 
 				}else{
 					//Preguntar si tiene la membresia por defecto y agregarla en caso de q no tenga
+					/*
+					 * AGREGAR UN CHECK PARA CUANDO EL USUARIO YA EXISTE
+					 * SI AGREGA LA MEMBRESIA O NO
+					 */
 					Boolean membresia= false;
 					for (Membership mem : bonita.memberships(user.getId(), 0, 100)) {
 						if(mem.getGroup().getName().equals(this.config.getDefaultGroup()) && mem.getRole().getName().equals(this.config.getDefaultRole())){

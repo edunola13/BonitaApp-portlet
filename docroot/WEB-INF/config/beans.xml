@@ -29,6 +29,9 @@
 		
 	<bean id="bonitaAdministration" class="com.BonitaAppBeans.BonitaAdministration">
 		<property name="config" ref="bonitaConfig"></property>
-	 </bean>
-	 --> 		
+	</bean>
+	--> 	
+	
+	<bean id="appUtils" class="com.bonitaAppBeans.AppUtils">
+	</bean>	
 </beans>

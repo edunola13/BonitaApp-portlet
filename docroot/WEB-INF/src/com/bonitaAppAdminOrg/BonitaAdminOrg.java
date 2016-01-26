@@ -9,6 +9,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import bonitaClass.Group;
 import bonitaClass.Role;
 import bonitaClass.User;
 
+import com.bonitaAppBeans.AppUtils;
 import com.bonitaAppBeans.BonitaAdministration;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -33,9 +35,15 @@ public class BonitaAdminOrg {
 	//public BonitaConfig config;
 	//@Autowired
 	public BonitaAdministration administration;
+	@Autowired
+	public AppUtils utils;
 	
 	@RenderMapping()
 	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {
+		//Url Parameters
+		String bosAction = utils.getUrlParameter(renderRequest, "bosAction");
+		String bosSearch = utils.getUrlParameter(renderRequest, "bosSearch");
+		//Inicializacion de Bonita
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
 		
 		String vista= "viewUsers-adminOrg";
@@ -50,7 +58,11 @@ public class BonitaAdminOrg {
 			return "error-login-admin";
 		}else{
 			String action= renderRequest.getParameter("action");
-			if(action == null)action="users";
+			if(bosAction != null){
+				action= bosAction;
+			}else if(action == null){
+				action= "users";
+			}
 			
 			if(action.equals("groups")){
 				List<Group> groups= this.administration.bonitaApi(renderRequest.getPortletSession()).groups(0, 100);
@@ -81,6 +93,7 @@ public class BonitaAdminOrg {
 				renderRequest.setAttribute("rtaAction", rtaAction);
 			}
 			//Seteo la seccion actual en base al action
+			renderRequest.setAttribute("bosSearch", bosSearch);
 			renderRequest.setAttribute("section", action);
 		}
 		return "adminOrg/" + vista;

@@ -11,6 +11,7 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import bonitaClass.Case;
 import bonitaClass.Task;
 
+import com.bonitaAppBeans.AppUtils;
 import com.bonitaAppBeans.BonitaAdministration;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -35,9 +37,15 @@ public class BonitaAdminApps {
 	//public BonitaConfig config;
 	//@Autowired
 	public BonitaAdministration administration;
+	@Autowired
+	public AppUtils utils;
 	
 	@RenderMapping()
 	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {
+		//Url Parameters
+		String bosAction = utils.getUrlParameter(renderRequest, "bosAction");
+		String bosSearch = utils.getUrlParameter(renderRequest, "bosSearch");
+		//Inicializacion de Bonita
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
 		
 		String vista= "viewTasks-adminApps";
@@ -52,7 +60,11 @@ public class BonitaAdminApps {
 			return "error-login-admin";
 		}else{
 			String action= renderRequest.getParameter("action");
-			if(action == null)action="tasks";
+			if(bosAction != null){
+				action= bosAction;
+			}else if(action == null){
+				action= "tasks";
+			}
 			
 			if(action.equals("cases")){
 				List<Case> cases= this.administration.bonitaApi(renderRequest.getPortletSession()).cases(0,10000);
@@ -83,6 +95,7 @@ public class BonitaAdminApps {
 				renderRequest.setAttribute("rtaAction", rtaAction);
 			}
 			//Seteo la seccion actual en base al action
+			renderRequest.setAttribute("bosSearch", bosSearch);
 			renderRequest.setAttribute("section", action);
 		}
 		return "adminApp/" + vista;

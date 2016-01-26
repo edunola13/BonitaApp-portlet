@@ -9,7 +9,8 @@
 		var locale= "<%=renderRequest.getLocale() %>";
 	   	$('#tabla-bonita-userArchived').dataTable( { //CONVERTIMOS NUESTRO LISTADO DE LA FORMA DEL JQUERY.DATATABLES- PASAMOS EL ID DE LA TABLA
 	        "sPaginationType": "full_numbers", //DAMOS FORMATO A LA PAGINACION(NUMEROS)
-	        "language": change_locale_i18n(locale.split("_")[0])
+	        "language": change_locale_i18n(locale.split("_")[0]),
+	        "search": {"search": "<%=(renderRequest.getAttribute("bosSearch") != null) ? renderRequest.getAttribute("bosSearch") : "" %>"}
 	    } );
 	})
 </script>

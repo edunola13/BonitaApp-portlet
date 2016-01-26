@@ -9,6 +9,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import bonitaClass.Case;
 import bonitaClass.Task;
 
+import com.bonitaAppBeans.AppUtils;
 import com.bonitaAppBeans.BonitaAdministration;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -29,9 +31,15 @@ public class BonitaAdminUserArchived {
 	//public BonitaConfig config;
 	//@Autowired
 	public BonitaAdministration administration;
+	@Autowired
+	public AppUtils utils;
 	
 	@RenderMapping()
-	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {	
+	public String showView(RenderRequest renderRequest,RenderResponse renderResponse) throws Exception {
+		//Url Parameters
+		String bosAction = utils.getUrlParameter(renderRequest, "bosAction");
+		String bosSearch = utils.getUrlParameter(renderRequest, "bosSearch");
+		//Inicializacion de Bonita
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
 		
 		String vista= "viewTasks-userArchived";
@@ -44,7 +52,11 @@ public class BonitaAdminUserArchived {
 			return "error-login";
 		}else{
 			String action= renderRequest.getParameter("action");
-			if(action == null)action="tasks";
+			if(bosAction != null){
+				action= bosAction;
+			}else if(action == null){
+				action= "tasks";
+			}
 			
 			bonitaClass.User user= this.administration.bonitaApi(renderRequest.getPortletSession()).actualUser();
 			
@@ -70,6 +82,7 @@ public class BonitaAdminUserArchived {
 				renderRequest.setAttribute("rtaAction", rtaAction);
 			}
 			//Seteo la seccion actual en base al action
+			renderRequest.setAttribute("bosSearch", bosSearch);
 			renderRequest.setAttribute("section", action);
 		}
 		return "userArchived/" + vista;
