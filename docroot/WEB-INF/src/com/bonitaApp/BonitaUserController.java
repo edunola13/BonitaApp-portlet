@@ -155,7 +155,7 @@ public class BonitaUserController {
 			SessionMessages.add(request, "success");
 			//response.setRenderParameter("rtaAction", "success");
 		}
-		response.setRenderParameter("action", "cases");
+		response.setRenderParameter("action", "tasks");
 	}
 	
 	/**
