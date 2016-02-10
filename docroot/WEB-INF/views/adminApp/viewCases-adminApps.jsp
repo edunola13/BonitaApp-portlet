@@ -11,6 +11,7 @@
 List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 %>
 
+<div id="bonita-adminApps">
 <jsp:include page="../../view-sections/header.jsp"></jsp:include>
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
@@ -46,3 +47,4 @@ List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 </table>
 
 <jsp:include page="../../view-sections/footer-adminApps.jsp"></jsp:include>
+</div>

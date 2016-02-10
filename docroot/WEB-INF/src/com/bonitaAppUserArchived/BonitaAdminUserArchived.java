@@ -96,16 +96,19 @@ public class BonitaAdminUserArchived {
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);
 		
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
 	@ActionMapping(value="tasks")
-	public void process(ActionRequest request, ActionResponse response){		
+	public void process(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
 	@ActionMapping(value="cases")
 	public void cases(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "cases");
 	}
 

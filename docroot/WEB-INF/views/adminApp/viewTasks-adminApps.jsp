@@ -13,6 +13,7 @@
 List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 %>
 
+<div id="bonita-adminApps">
 <jsp:include page="../../view-sections/header.jsp"></jsp:include>
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
@@ -47,7 +48,7 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 					<fmt:message key="resta" /> <%=task.timeToDeadline() %>
 				<%} %>
 				</td>
-				<%if(task.getAssignedId() == 0L){%>
+				<%if(task.getAssignedId() == null){%>
 					<td>NO</td>
 					<td>
 						<portlet:resourceURL var="assignTask" id="assignTask">
@@ -56,7 +57,7 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 						<button class="btn btn-primary" onclick="assignTask('<%=assignTask %>')"><fmt:message key="asignar" /></button>
 					</td>
 				<%}else{ %>
-					<td>SI - UserId <%=task.getAssignedId() %></td>
+					<td><%=task.getAssignedId().getUserName() %></td>
 					<td>
 						<portlet:actionURL var="releaseId" name="releaseId">
 							<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
@@ -92,7 +93,8 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
                     function(popupIdToClose) {
                     	var popupDialog = Liferay.Util.Window.getById(popupIdToClose);
                       	popupDialog.destroy();
-                    }, 
+                      	location.reload();
+                    },
                     ['liferay-util-window']
                	);
    		});
@@ -107,8 +109,9 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 			error: function(){
 				alert("error");	
 			}				
-		});  
-  	}  
+		});
+  	}	
 </aui:script>
 
 <jsp:include page="../../view-sections/footer-adminApps.jsp"></jsp:include>
+</div>

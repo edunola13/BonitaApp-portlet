@@ -50,11 +50,11 @@ public class BonitaTaskController {
 				String password= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));
 				String username= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE));
 				request.setAttribute("password", password);
-				request.setAttribute("userName", username);
+				request.setAttribute("userName", username);								
 			}else{
 				request.setAttribute("estado", false);
 			}
-			request.setAttribute("realizando", true);
+			request.setAttribute("realizando", true);			
 		}else{
 			request.setAttribute("realizando", false);
 		}
@@ -70,5 +70,6 @@ public class BonitaTaskController {
 	    
 	    eventResponse.setRenderParameter("userId", values[0]);
 	    eventResponse.setRenderParameter("taskId", values[1]);
+	    eventRequest.setAttribute("scrollToPortlet", "true");
 	}
 }

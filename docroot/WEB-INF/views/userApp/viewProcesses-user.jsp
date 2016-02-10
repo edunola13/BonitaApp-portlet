@@ -9,6 +9,7 @@
 List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 %>
 
+<div id="bonita-userApps">
 <jsp:include page="../../view-sections/header.jsp"></jsp:include>
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
@@ -38,3 +39,4 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 </table>
 
 <jsp:include page="../../view-sections/footer.jsp"></jsp:include>
+</div>

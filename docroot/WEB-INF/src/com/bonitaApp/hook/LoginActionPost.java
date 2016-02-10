@@ -82,24 +82,24 @@ public class LoginActionPost  extends Action {
 					bonita.addMembership(user.getId(), role.getId(), group.getId());
 					System.out.println("## Usuario Creado"); 
 				}else{
-					//Preguntar si tiene la membresia por defecto y agregarla en caso de q no tenga
-					/*
-					 * AGREGAR UN CHECK PARA CUANDO EL USUARIO YA EXISTE
-					 * SI AGREGA LA MEMBRESIA O NO
-					 */
-					Boolean membresia= false;
-					for (Membership mem : bonita.memberships(user.getId(), 0, 100)) {
-						if(mem.getGroup().getName().equals(this.config.getDefaultGroup()) && mem.getRole().getName().equals(this.config.getDefaultRole())){
-							membresia= true;
-							break;
+					//Preguntar si tiene profiles 
+					//Si no tiene profiles asignar la membresia por defecto
+					if(bonita.userProfiles(user.getId()).isEmpty()){
+						System.out.println("## Usuario sin Profiles - Asignar Membresia por Defecto");
+						Boolean membresia= false;
+						for (Membership mem : bonita.memberships(user.getId(), 0, 100)) {
+							if(mem.getGroup().getName().equals(this.config.getDefaultGroup()) && mem.getRole().getName().equals(this.config.getDefaultRole())){
+								membresia= true;
+								break;
+							}
 						}
-					}
-					if(!membresia){
-						System.out.println("## Asignando Membresia");
-						Group group= bonita.group(this.config.getDefaultGroup());
-						Role role= bonita.role(this.config.getDefaultRole());
-						bonita.addMembership(user.getId(), role.getId(), group.getId());
-						System.out.println("## Membresia Asignada");
+						if(!membresia){
+							System.out.println("## Asignando Membresia");
+							Group group= bonita.group(this.config.getDefaultGroup());
+							Role role= bonita.role(this.config.getDefaultRole());
+							bonita.addMembership(user.getId(), role.getId(), group.getId());
+							System.out.println("## Membresia Asignada");
+						}
 					}
 				}				
 			}

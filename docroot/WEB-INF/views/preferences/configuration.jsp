@@ -16,6 +16,7 @@
 <%
 boolean title = GetterUtil.getBoolean(portletPreferences.getValue("title", StringPool.FALSE));
 boolean doTaskAjax = GetterUtil.getBoolean(portletPreferences.getValue("doTaskAjax", StringPool.TRUE));
+boolean useAssignRelease = GetterUtil.getBoolean(portletPreferences.getValue("useAssignRelease", StringPool.TRUE));
 %>
 
 <aui:form action="<%= configurationURL %>" method="post" name="fm">
@@ -23,6 +24,7 @@ boolean doTaskAjax = GetterUtil.getBoolean(portletPreferences.getValue("doTaskAj
 
 	<aui:input label="Show Title" name="preferences--title--" type="checkbox" value="<%= title %>" />
     <aui:input label="Task Form - Pop Up" name="preferences--doTaskAjax--" type="checkbox" value="<%= doTaskAjax %>" />
+    <aui:input label="Use Assign/Release" name="preferences--useAssignRelease--" type="checkbox" value="<%= useAssignRelease %>" />
 
     <aui:button-row>
        <aui:button type="submit" />

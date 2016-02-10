@@ -109,21 +109,25 @@ public class BonitaAdminApps {
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);
 		
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
 	@ActionMapping(value="processes")
-	public void process(ActionRequest request, ActionResponse response){		
+	public void process(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "processes");
 	}
 	
 	@ActionMapping(value="cases")
 	public void cases(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "cases");
 	}
 	
 	@ActionMapping(value="tasks")
 	public void tasks(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
@@ -154,6 +158,7 @@ public class BonitaAdminApps {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
@@ -171,6 +176,7 @@ public class BonitaAdminApps {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
@@ -188,6 +194,7 @@ public class BonitaAdminApps {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "cases");
 	}
 	
@@ -205,6 +212,7 @@ public class BonitaAdminApps {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "processes");
 	}
 	
@@ -222,6 +230,7 @@ public class BonitaAdminApps {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "processes");
 	}
 	
@@ -239,6 +248,7 @@ public class BonitaAdminApps {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "processes");
 	}
 	

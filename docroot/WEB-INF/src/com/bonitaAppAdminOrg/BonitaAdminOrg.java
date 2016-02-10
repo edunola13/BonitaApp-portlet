@@ -107,21 +107,25 @@ public class BonitaAdminOrg {
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);
 		
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "users");
 	}
 	
 	@ActionMapping(value="users")
-	public void users(ActionRequest request, ActionResponse response){		
+	public void users(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "users");
 	}
 	
 	@ActionMapping(value="groups")
 	public void groups(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "groups");
 	}
 	
 	@ActionMapping(value="roles")
 	public void roles(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "roles");
 	}
 	
@@ -139,6 +143,7 @@ public class BonitaAdminOrg {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "users");
 	}
 	
@@ -156,6 +161,7 @@ public class BonitaAdminOrg {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "users");
 	}
 	

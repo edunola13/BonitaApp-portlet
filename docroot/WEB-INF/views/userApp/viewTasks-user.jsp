@@ -13,6 +13,7 @@
 List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 %>
 
+<div id="bonita-userApps">
 <jsp:include page="../../view-sections/header.jsp"></jsp:include>
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
@@ -46,33 +47,49 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 				<%}else{ %>
 					<fmt:message key="resta" /> <%=task.timeToDeadline() %>
 				<%} %>
-				</td>
-				<%if(task.getAssignedId() == 0L){%>
+				</td>				
+				<%if(task.getAssignedId() == null){%>
 					<td>NO</td>
 					<td>
-						<portlet:actionURL var="assignId" name="assignId">
-							<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
-						</portlet:actionURL>
-						<a href="<%= assignId%>" class="btn btn-primary"><fmt:message key="asignar" /></a>
+						<%if(renderRequest.getPreferences().getValue("useAssignRelease", "true").equals("true")){ %>
+							<portlet:actionURL var="assignId" name="assignId">
+								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
+							</portlet:actionURL>
+							<a href="<%= assignId%>" class="btn btn-primary"><fmt:message key="asignar" /></a>
+						<%}else{ %>
+							<%if(renderRequest.getPreferences().getValue("doTaskAjax", "true").equals("true")){ %>
+								<portlet:resourceURL var="doTaskAjax" id="doTaskAjax">
+									<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>						
+								</portlet:resourceURL>
+								<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax %>')"><fmt:message key="realizar" /></button>
+							<%}else{ %>
+								<portlet:actionURL var="doTask" name="doTask">
+									<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>							
+								</portlet:actionURL>
+								<a href="<%= doTask%>" class="btn btn-primary"><fmt:message key="realizar" /></a>							
+							<%} %>
+						<%} %>
 					</td>
 				<%}else{ %>
 					<td>SI</td>
 					<td>
-						<portlet:actionURL var="releaseId" name="releaseId">
-							<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
-						</portlet:actionURL>
-						<a href="<%= releaseId%>" class="btn btn-primary"><fmt:message key="liberar" /></a>
+						<%if(renderRequest.getPreferences().getValue("useAssignRelease", "true").equals("true")){ %>
+							<portlet:actionURL var="releaseId" name="releaseId">
+								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
+							</portlet:actionURL>
+							<a href="<%= releaseId%>" class="btn btn-primary"><fmt:message key="liberar" /></a>
+						<%} %>
 												
 						<%if(renderRequest.getPreferences().getValue("doTaskAjax", "true").equals("true")){ %>
-							<portlet:resourceURL var="doTaskAjax" id="doTaskAjax">
+							<portlet:resourceURL var="doTaskAjax2" id="doTaskAjax">
 								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>						
 							</portlet:resourceURL>
-							<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax %>')"><fmt:message key="realizar" /></button>
+							<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax2 %>')"><fmt:message key="realizar" /></button>
 						<%}else{ %>
-							<portlet:actionURL var="doTask" name="doTask">
+							<portlet:actionURL var="doTask2" name="doTask">
 								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>							
 							</portlet:actionURL>
-							<a href="<%= doTask%>" class="btn btn-primary"><fmt:message key="realizar" /></a>							
+							<a href="<%= doTask2%>" class="btn btn-primary"><fmt:message key="realizar" /></a>							
 						<%} %>
 						
 					</td>
@@ -103,11 +120,16 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
                     window,
                     '<portlet:namespace/>closePopup',
                     function(popupIdToClose) {
+                    	confirm("asdasdad");
                     	var popupDialog = Liferay.Util.Window.getById(popupIdToClose);
                       	popupDialog.destroy();
+                      	location.reload();
                     }, 
                     ['liferay-util-window']
                	);
+           		$("#dotask .close").on("click", function() {
+           			location.reload();
+           		});
    		});
    		//Elimino datos anteriores, en caso de que haya
    		$("#dotask").find(".modal-body").html("");
@@ -125,3 +147,4 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 </aui:script>
 
 <jsp:include page="../../view-sections/footer.jsp"></jsp:include>
+</div>

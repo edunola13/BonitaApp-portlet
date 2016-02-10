@@ -9,6 +9,7 @@
 List<User> users= (List<User>)renderRequest.getAttribute("users");
 %>
 
+<div id="bonita-adminOrg">
 <jsp:include page="../../view-sections/header-adminOrg.jsp"></jsp:include>
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
@@ -54,3 +55,4 @@ List<User> users= (List<User>)renderRequest.getAttribute("users");
 </table>
 
 <jsp:include page="../../view-sections/footer-adminOrg.jsp"></jsp:include>
+</div>

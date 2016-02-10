@@ -9,6 +9,7 @@
 List<Group> groups= (List<Group>)renderRequest.getAttribute("groups");
 %>
 
+<div id="bonita-adminOrg">
 <jsp:include page="../../view-sections/header-adminOrg.jsp"></jsp:include>
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
@@ -33,3 +34,4 @@ List<Group> groups= (List<Group>)renderRequest.getAttribute("groups");
 </table>
 
 <jsp:include page="../../view-sections/footer-adminOrg.jsp"></jsp:include>
+</div>

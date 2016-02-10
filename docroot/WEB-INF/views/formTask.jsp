@@ -6,6 +6,7 @@
 
 <portlet:defineObjects />
 
+<div id="bonita-taskForm">
 <%if((Boolean)renderRequest.getAttribute("realizando")){ %>
 	<%if((Boolean)renderRequest.getAttribute("estado")){ %>
 		<%Task task= (Task)renderRequest.getAttribute("task"); %>
@@ -25,9 +26,15 @@
 			document.getElementById("bonitaform").submit();
 			document.getElementById("bonitaform").remove();
 		/*]]>*/</script>
+		<script>
+			<%if(renderRequest.getAttribute("scrollToPortlet") != null){ %>
+			   	document.getElementById("bonita-taskForm").scrollIntoView(true);
+			<%} %>
+		</script>
 	<% }else{%>
 		<h5><fmt:message key="tareaCompletada"/></h5>
 	<%}%>
 <%}else{%>
 	<h4><fmt:message key="tareaNoSeleccionada"/></h4>
 <%}%>
+</div>

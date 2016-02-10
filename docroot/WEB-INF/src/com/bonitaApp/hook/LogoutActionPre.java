@@ -15,14 +15,18 @@ public class LogoutActionPre extends Action {
 	 */
 	public void run(HttpServletRequest req, HttpServletResponse res){
 		HttpSession session= req.getSession();
-		BonitaApi bonita= (BonitaApi)session.getAttribute("BONITA_API_PORT");
-		if(bonita != null){
-			try{
-				System.out.println("## Borrando Session contra el servidor Bonita");
-				bonita.logout();
-			}catch(Exception e){
-				System.out.println(e.getMessage());
+		try{
+			BonitaApi bonita= (BonitaApi)session.getAttribute("BONITA_API_PORT");
+			if(bonita != null){
+				try{
+					System.out.println("## Borrando Session contra el servidor Bonita");
+					bonita.logout();
+				}catch(Exception e){
+					System.out.println(e.getMessage());
+				}
 			}
+		}catch(Exception e){
+			System.out.println("## Error deslogueando contra el Servidor Bonita");
 		}
 		System.out.println("## Custom Logout Bonita App");
 	}

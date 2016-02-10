@@ -9,6 +9,7 @@
 List<Role> roles= (List<Role>)renderRequest.getAttribute("roles");
 %>
 
+<div id="bonita-adminOrg">
 <jsp:include page="../../view-sections/header-adminOrg.jsp"></jsp:include>
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
@@ -33,3 +34,4 @@ List<Role> roles= (List<Role>)renderRequest.getAttribute("roles");
 </table>
 
 <jsp:include page="../../view-sections/footer-adminOrg.jsp"></jsp:include>
+</div>

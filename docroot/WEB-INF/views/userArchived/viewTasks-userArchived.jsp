@@ -12,6 +12,7 @@
 List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 %>
 
+<div id="bonita-userArchived">
 <jsp:include page="../../view-sections/header-userArchived.jsp"></jsp:include>
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
@@ -44,3 +45,4 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 </table>
 
 <jsp:include page="../../view-sections/footer-userArchived.jsp"></jsp:include>
+</div>

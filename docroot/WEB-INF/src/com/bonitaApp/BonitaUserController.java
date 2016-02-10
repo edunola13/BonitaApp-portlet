@@ -78,7 +78,17 @@ public class BonitaUserController {
 			}else{
 				List<Task> tasks= this.administration.bonitaApi(renderRequest.getPortletSession()).tasks(user.getId(),0,100);
 				renderRequest.setAttribute("tasks", tasks);
-				vista= "viewTasks-user";			
+				vista= "viewTasks-user";
+				//Si se debe levantar tarea automaticamente despues de iniciar un proceso
+				//Se consigue el id de Tarea en base al caso a Id
+				if(renderRequest.getAttribute("caseId-autoloadTask") != null){
+					//Lo hago dormir un rato para que traiga la ultima tarea, ya que si no, no la traia.
+					Thread.sleep(2500);
+					tasks= this.administration.bonitaApi(renderRequest.getPortletSession()).tasks(user.getId(),0,100);
+					renderRequest.setAttribute("tasks", tasks);
+					Long taskId= this.autoloadTask(tasks, (Long)renderRequest.getAttribute("caseId-autoloadTask"));
+					if(taskId != null) renderRequest.setAttribute("autoload-taskId", taskId);
+				}
 			}		
 			
 			PortletURL processesActionUrl = renderResponse.createActionURL();
@@ -98,9 +108,18 @@ public class BonitaUserController {
 			//Seteo la seccion actual en base al action
 			renderRequest.setAttribute("bosSearch", bosSearch);
 			
-			renderRequest.setAttribute("section", action);
+			renderRequest.setAttribute("section", action);			
 		}
 		return "userApp/" + vista;
+	}
+	
+	private Long autoloadTask(List<Task> tasks, long caseId){
+		for (Task task : tasks) {
+			if(task.getCaseId() == caseId){
+				return task.getId();
+			}
+		}
+		return null;
 	}
 	
 	@ActionMapping(value="updateData")
@@ -116,21 +135,25 @@ public class BonitaUserController {
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);
 		
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
 	@ActionMapping(value="processes")
-	public void process(ActionRequest request, ActionResponse response){		
+	public void process(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "processes");
 	}
 	
 	@ActionMapping(value="cases")
 	public void cases(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "cases");
 	}
 	
 	@ActionMapping(value="tasks")
 	public void tasks(ActionRequest request, ActionResponse response){
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
@@ -152,9 +175,11 @@ public class BonitaUserController {
 			SessionErrors.add(request, "error");
 			//response.setRenderParameter("rtaAction", "error");
 		}else{
+			request.setAttribute("caseId-autoloadTask", caso.getId());
 			SessionMessages.add(request, "success");
 			//response.setRenderParameter("rtaAction", "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
@@ -173,6 +198,7 @@ public class BonitaUserController {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 	
@@ -190,6 +216,7 @@ public class BonitaUserController {
 		}else{
 			SessionMessages.add(request, "success");
 		}
+		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "tasks");
 	}
 		
@@ -204,9 +231,15 @@ public class BonitaUserController {
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
 		
 		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).assignTask(taskId, user.getId());
 		
-		QName qName= new QName("http://BontaAppLiferay.com", "doTask", "x");
-		response.setEvent(qName, Long.toString(user.getId()) + "-" + Long.toString(taskId));
+		if(!exito){
+			SessionErrors.add(request, "error");
+		}else{
+			QName qName= new QName("http://BontaAppLiferay.com", "doTask", "x");
+			response.setEvent(qName, Long.toString(user.getId()) + "-" + Long.toString(taskId));
+			SessionMessages.add(request, "success");
+		}		
 		
 		response.setRenderParameter("action", "tasks");
 	}
@@ -215,25 +248,36 @@ public class BonitaUserController {
 	public String doTaskAjax(ResourceRequest request,ResourceResponse response, @RequestParam long taskId) throws SystemException{
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
 		
-		Task task= this.administration.bonitaApi(request.getPortletSession()).task(taskId);
-		if(task != null && task.getState().equals("ready")){
-			request.setAttribute("estado", true);
-			request.setAttribute("task", task);
-			
-			//String url= his.config.getServerUrl() + "?ui=form#form="+ task.getProcess().getName() +"--6.0--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form&locale=default";
-			String url= this.administration.getConfig().getServerUrl() + "loginservice?redirectUrl=/bonita/portal/homepage?ui=form&amp;ui=form&amp;locale=default#form="+ task.getProcess().getName() +"--"+task.getProcess().getVersion()+"--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form";
-			request.setAttribute("url", url);
-			
-			String password= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));
-			String username= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE));
-			request.setAttribute("password", password);
-			request.setAttribute("userName", username);
+		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).assignTask(taskId, user.getId());
+		
+		if(!exito){
+			//SessionErrors.add(request, "error");
+			request.setAttribute("errorAssign", true);
 		}else{
-			request.setAttribute("estado", false);
-		}
+			Task task= this.administration.bonitaApi(request.getPortletSession()).task(taskId);
+			if(task != null && task.getState().equals("ready")){
+				request.setAttribute("estado", true);
+				request.setAttribute("task", task);
+				
+				//String url= this.config.getServerUrl() + "?ui=form#form="+ task.getProcess().getName() +"--6.0--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form&locale=default";
+				String url= this.administration.getConfig().getServerUrl() + "loginservice?redirectUrl=/bonita/portal/homepage?ui=form&amp;ui=form&amp;locale=default#form="+ task.getProcess().getName() +"--"+task.getProcess().getVersion()+"--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form";
+				request.setAttribute("url", url);
+				
+				String password= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));
+				String username= (String) (request.getPortletSession().getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE));
+				request.setAttribute("password", password);
+				request.setAttribute("userName", username);
+			}else{
+				request.setAttribute("estado", false);
+			}
+			request.setAttribute("errorAssign", false);
+			//SessionMessages.add(request, "success");
+		}		
 		
 		return "userApp/formTask-Ajax";
 	}
+	
 	
 	/*private BonitaApi getBonita(PortletSession portletSession){		
 		BonitaApi bonita= null;
