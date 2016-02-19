@@ -8,6 +8,8 @@ import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import bonitaClass.Group;
 import bonitaClass.Role;
@@ -164,5 +167,185 @@ public class BonitaAdminOrg {
 		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "users");
 	}
+		
+	/**
+	 * Formulario para ver y asignar nueva membresia
+	 * @throws SystemException 
+	 */
+	@ResourceMapping(value="memberships")
+	public String memberships(ResourceRequest request,ResourceResponse response, @RequestParam String userName) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		User user= this.administration.bonitaApi(request.getPortletSession()).user(userName);
+		request.setAttribute("user", user);
+		request.setAttribute("roles", this.administration.bonitaApi(request.getPortletSession()).roles(0, 100000));
+		request.setAttribute("groups", this.administration.bonitaApi(request.getPortletSession()).groups(0, 100000));
+		request.setAttribute("memberships", this.administration.bonitaApi(request.getPortletSession()).memberships(user.getId(), 0, 100000));
+		return "adminOrg/assignMembership";
+	}
 	
+	/**
+	 * Asignar Membresia
+	 * @throws SystemException 
+	 */
+	@ActionMapping(value="assignMembership")
+	public void assignMembership(ActionRequest request, ActionResponse response) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).addMembership(Long.parseLong(request.getParameter("userId")), 
+				Long.parseLong(request.getParameter("roleId")), Long.parseLong(request.getParameter("groupId")));
+		if(!exito){
+			SessionErrors.add(request, "error");
+		}else{
+			SessionMessages.add(request, "success");
+		}
+		request.setAttribute("scrollToPortlet", "true");
+		response.setRenderParameter("action", "users");
+	}
+	
+	/**
+	 * Formulario Group
+	 * @throws SystemException 
+	 */
+	@ResourceMapping(value="formGroup")
+	public String formGroup(ResourceRequest request,ResourceResponse response, @RequestParam long groupId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		Group group= new Group();
+		if(groupId != 0){
+			group= this.administration.bonitaApi(request.getPortletSession()).group(groupId);
+		}		
+		request.setAttribute("group", group);
+		
+		return "adminOrg/formGroup";
+	}
+	
+	/**
+	 * Add Group
+	 * @throws SystemException 
+	 */
+	@ActionMapping(value="addGroup")
+	public void addGroup(ActionRequest request, ActionResponse response) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		Group group= this.administration.bonitaApi(request.getPortletSession()).createGroup(request.getParameter("name"), 
+				request.getParameter("displayName"), request.getParameter("description"));
+		if(group == null){
+			SessionErrors.add(request, "error");
+		}else{
+			SessionMessages.add(request, "success");
+		}
+		request.setAttribute("scrollToPortlet", "true");
+		response.setRenderParameter("action", "groups");
+	}
+	
+	/**
+	 * Update Group
+	 * @throws SystemException 
+	 */
+	@ActionMapping(value="updateGroup")
+	public void updateGroup(ActionRequest request, ActionResponse response) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).updateGroup(Long.parseLong(request.getParameter("groupId")),
+				request.getParameter("name"), request.getParameter("displayName"), request.getParameter("description"));
+		if(!exito){
+			SessionErrors.add(request, "error");
+		}else{
+			SessionMessages.add(request, "success");
+		}
+		request.setAttribute("scrollToPortlet", "true");
+		response.setRenderParameter("action", "groups");
+	}
+	
+	/**
+	 * Update Group
+	 * @throws SystemException 
+	 */
+	@ActionMapping(value="deleteGroup")
+	public void deleteGroup(ActionRequest request, ActionResponse response, @RequestParam long groupId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deleteGroup(groupId);
+		if(!exito){
+			SessionErrors.add(request, "error");
+		}else{
+			SessionMessages.add(request, "success");
+		}
+		request.setAttribute("scrollToPortlet", "true");
+		response.setRenderParameter("action", "groups");
+	}
+	
+	/**
+	 * Formulario Role
+	 * @throws SystemException 
+	 */
+	@ResourceMapping(value="formRole")
+	public String formRole(ResourceRequest request,ResourceResponse response, @RequestParam long roleId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		Role role= new Role();
+		if(roleId != 0){
+			role= this.administration.bonitaApi(request.getPortletSession()).role(roleId);
+		}		
+		request.setAttribute("role", role);
+		
+		return "adminOrg/formRole";
+	}
+	
+	/**
+	 * Add Role
+	 * @throws SystemException 
+	 */
+	@ActionMapping(value="addRole")
+	public void addRole(ActionRequest request, ActionResponse response) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		Role role= this.administration.bonitaApi(request.getPortletSession()).createRole(request.getParameter("name"), 
+				request.getParameter("displayName"), request.getParameter("description"));
+		if(role == null){
+			SessionErrors.add(request, "error");
+		}else{
+			SessionMessages.add(request, "success");
+		}
+		request.setAttribute("scrollToPortlet", "true");
+		response.setRenderParameter("action", "roles");
+	}
+	
+	/**
+	 * Update Role
+	 * @throws SystemException 
+	 */
+	@ActionMapping(value="updateRole")
+	public void updateRole(ActionRequest request, ActionResponse response) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		System.out.println(request.getParameter("roleId"));
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).updateRole(Long.parseLong(request.getParameter("roleId")),
+				request.getParameter("name"), request.getParameter("displayName"), request.getParameter("description"));
+		if(!exito){
+			SessionErrors.add(request, "error");
+		}else{
+			SessionMessages.add(request, "success");
+		}
+		request.setAttribute("scrollToPortlet", "true");
+		response.setRenderParameter("action", "roles");
+	}
+	
+	/**
+	 * Update Role
+	 * @throws SystemException 
+	 */
+	@ActionMapping(value="deleteRole")
+	public void deleteRole(ActionRequest request, ActionResponse response, @RequestParam long roleId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deleteRole(roleId);
+		if(!exito){
+			SessionErrors.add(request, "error");
+		}else{
+			SessionMessages.add(request, "success");
+		}
+		request.setAttribute("scrollToPortlet", "true");
+		response.setRenderParameter("action", "roles");
+	}
 }

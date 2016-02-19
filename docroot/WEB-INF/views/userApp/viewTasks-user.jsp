@@ -123,12 +123,12 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
                     	confirm("asdasdad");
                     	var popupDialog = Liferay.Util.Window.getById(popupIdToClose);
                       	popupDialog.destroy();
-                      	location.reload();
+                      	window.location.href='<%= renderRequest.getAttribute("tasksActionUrl")%>';
                     }, 
                     ['liferay-util-window']
                	);
            		$("#dotask .close").on("click", function() {
-           			location.reload();
+           			window.location.href='<%= renderRequest.getAttribute("tasksActionUrl")%>';
            		});
    		});
    		//Elimino datos anteriores, en caso de que haya
