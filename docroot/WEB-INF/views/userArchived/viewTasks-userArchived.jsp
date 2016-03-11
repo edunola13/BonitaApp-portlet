@@ -33,8 +33,8 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 		<%for(Task task: tasks){ %>
 			<tr>
 				<td><%=task.getId() %></td>
-				<td><%=task.getName() %>
-				<td><%=task.getProcess().getName() %></td>
+				<td><%=task.getDisplayName() %>
+				<td><%=task.getProcess().getDisplayName() %></td>
 				<td><%=task.getCaseId() %></td>
 				<td><%=task.getState() %></td>
 				<td><%=task.getPriority() %></td>

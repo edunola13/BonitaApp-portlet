@@ -30,7 +30,7 @@ List<Case> cases= (List<Case>)renderRequest.getAttribute("cases");
 		<%for(Case caso: cases){ %>
 			<tr>
 				<td><%=caso.getId() %></td>
-				<td><%=caso.getProcess().getName() %></td>
+				<td><%=caso.getProcess().getDisplayName() %></td>
 				<td><%=caso.getState() %></td>
 				<td><%=caso.getStartedBy() %></td>
 				<td><%=caso.getBeginDateString() %></td>

@@ -25,6 +25,7 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 			<th><fmt:message key="nombre" /></th>
 			<th><fmt:message key="proceso" /></th>
 			<th><fmt:message key="caso" /></th>
+			<th><fmt:message key="alcanzada"/></th>
 			<th><fmt:message key="estado" /></th>
 			<th><fmt:message key="prioridad" /></th>
 			<th><fmt:message key="deadLine" /></th>
@@ -36,9 +37,10 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 		<%for(Task task: tasks){ %>
 			<tr>
 				<td><%=task.getId() %></td>
-				<td><%=task.getName() %>
-				<td><%=task.getProcess().getName() %></td>
+				<td><%=task.getDisplayName() %>
+				<td><%=task.getProcess().getDisplayName() %></td>
 				<td><%=task.getCaseId() %></td>
+				<td><%=task.getReachedStateDateString() %></td>
 				<td><%=task.getState() %></td>
 				<td><%=task.getPriority() %></td>
 				<td>

@@ -26,7 +26,7 @@
 		<script type="text/javascript">/*<![CDATA[*/
 			document.getElementById("bonitaform").submit();
 			document.getElementById("bonitaform").remove();
-			$("#dotask").find(".modal-header h3").html("<%=task.getProcess().getName() %> - <%=task.getDisplayName() %> - Case ID: <%= task.getCaseId()%> - Task ID: <%=task.getId() %>");
+			$("#dotask").find(".modal-header h3").html("<%=task.getProcess().getDisplayName() %> - <%=task.getDisplayName() %> - <fmt:message key="casoId"/>: <%= task.getCaseId()%> - <fmt:message key="tareaId"/>: <%=task.getId() %>");
 		/*]]>*/</script>
 	<% }else{%>
 		<h5><fmt:message key="tareaCompletada"/></h5>

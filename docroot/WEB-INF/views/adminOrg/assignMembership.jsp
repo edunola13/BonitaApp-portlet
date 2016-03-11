@@ -13,7 +13,7 @@
 <h5><fmt:message key="membresias-actuales" /></h5>
 <%List<Membership> memberships= (List<Membership>)resourceRequest.getAttribute("memberships"); %>
 <%for(Membership membership : memberships){ %>
-	<p><%=membership.getRole().getName()%> <fmt:message key="membresias-de" /> <%=membership.getGroup().getName()%></p>
+	<p><%=membership.getRole().getDisplayName()%> <fmt:message key="membresias-de" /> <%=membership.getGroup().getDisplayName()%></p>
 <%} %>	
 
 <h5><fmt:message key="membresias-nueva" /></h5>

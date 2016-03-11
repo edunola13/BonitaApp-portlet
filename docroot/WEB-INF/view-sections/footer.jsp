@@ -3,6 +3,8 @@
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.dataTables.js"></script>
+
+<!-- Armar paginador de Tabla -->
 <script>
 	$(document).ready(function(){
 		var locale= "<%=renderRequest.getLocale() %>";
@@ -18,6 +20,7 @@
 	<%} %>
 </script>
 
+<!-- Autoload de Formulario de Tarea -->
 <%
 Long taskId= (Long)renderRequest.getAttribute("autoload-taskId");
 // taskId= 420026l; //De Prueba
@@ -43,3 +46,27 @@ if(taskId != null){
 	})
 </script>
 <% }%>
+
+<!-- Actualizacion automatica de bandeja -->
+<%if(renderRequest.getAttribute("tasks") != null && renderRequest.getPreferences().getValue("updateInbox", "true").equals("true")){ %>
+<portlet:resourceURL var="actualizeTasks" id="actualizeTasks">						
+</portlet:resourceURL>
+<script>
+	$(document).ready(function(){
+		var delay= 1000 * <%= renderRequest.getPreferences().getValue("updateInterval", "300")%>; //Time - Preferences es Segundos
+		
+		setInterval(function(){			
+			$.ajax({
+				url:"<%=actualizeTasks %>",
+				success:function(data){			
+					$("#bonita-userApps").find("#contenedor-tabla").html("");
+					$("#bonita-userApps").find("#contenedor-tabla").html(data);
+				},
+				error: function(){
+					alert("error");	
+				}				
+			});
+		}, delay); 
+	})
+</script>
+<%}%>

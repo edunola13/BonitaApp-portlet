@@ -277,7 +277,18 @@ public class BonitaUserController {
 		
 		return "userApp/formTask-Ajax";
 	}
-	
+		
+	@ResourceMapping(value="actualizeTasks")
+	public String actualizeTasks(ResourceRequest request,ResourceResponse response) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		
+		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
+		
+		List<Task> tasks= this.administration.bonitaApi(request.getPortletSession()).tasks(user.getId(),0,100);
+		request.setAttribute("tasks", tasks);
+		
+		return "userApp/tableTasks-user";
+	}
 	
 	/*private BonitaApi getBonita(PortletSession portletSession){		
 		BonitaApi bonita= null;

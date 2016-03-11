@@ -18,86 +18,86 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
 
 <jsp:include page="../../view-sections/alert.jsp"></jsp:include>
 
-<table id="tabla-bonita" class="table table-striped table-bordered table-hover">
-	<thead>
-		<tr>
-			<th>Id</th>
-			<th><fmt:message key="nombre" /></th>
-			<th><fmt:message key="proceso" /></th>
-			<th><fmt:message key="caso" /></th>
-			<th><fmt:message key="estado" /></th>
-			<th><fmt:message key="prioridad" /></th>
-			<th><fmt:message key="deadLine" /></th>
-			<th><fmt:message key="asignado" /></th>			
-			<th><fmt:message key="funciones" /></th>
-		</tr>
-	</thead>
-	<tbody>
-		<%for(Task task: tasks){ %>
+<div id="contenedor-tabla">
+	<table id="tabla-bonita" class="table table-striped table-bordered table-hover">
+		<thead>
 			<tr>
-				<td><%=task.getId() %></td>
-				<td><%=task.getName() %>
-				<td><%=task.getProcess().getName() %></td>
-				<td><%=task.getCaseId() %></td>
-				<td><%=task.getState() %></td>
-				<td><%=task.getPriority() %></td>
-				<td>
-				<%if(task.exceededDeadline()){ %>
-					<fmt:message key="excedido" /> <%=task.timeExceededDeadline() %>
-				<%}else{ %>
-					<fmt:message key="resta" /> <%=task.timeToDeadline() %>
-				<%} %>
-				</td>				
-				<%if(task.getAssignedId() == null){%>
-					<td>NO</td>
+				<th>Id</th>
+				<th><fmt:message key="nombre" /></th>
+				<th><fmt:message key="proceso" /></th>
+				<th><fmt:message key="caso" /></th>
+				<th><fmt:message key="alcanzada"/></th>
+				<th><fmt:message key="deadLine" /></th>
+				<th><fmt:message key="asignado" /></th>			
+				<th><fmt:message key="funciones" /></th>
+			</tr>
+		</thead>
+		<tbody>
+			<%for(Task task: tasks){ %>
+				<tr>
+					<td><%=task.getId() %></td>
+					<td><%=task.getDisplayName() %>
+					<td><%=task.getProcess().getDisplayName() %></td>
+					<td><%=task.getCaseId() %></td>
+					<td><%=task.getReachedStateDateString()%></td>
 					<td>
-						<%if(renderRequest.getPreferences().getValue("useAssignRelease", "true").equals("true")){ %>
-							<portlet:actionURL var="assignId" name="assignId">
-								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
-							</portlet:actionURL>
-							<a href="<%= assignId%>" class="btn btn-primary"><fmt:message key="asignar" /></a>
-						<%}else{ %>
+					<%if(task.exceededDeadline()){ %>
+						<fmt:message key="excedido" /> <%=task.timeExceededDeadline() %>
+					<%}else{ %>
+						<fmt:message key="resta" /> <%=task.timeToDeadline() %>
+					<%} %>
+					</td>				
+					<%if(task.getAssignedId() == null){%>
+						<td>NO</td>
+						<td>
+							<%if(renderRequest.getPreferences().getValue("useAssignRelease", "true").equals("true")){ %>
+								<portlet:actionURL var="assignId" name="assignId">
+									<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
+								</portlet:actionURL>
+								<a href="<%= assignId%>" class="btn btn-primary"><fmt:message key="asignar" /></a>
+							<%}else{ %>
+								<%if(renderRequest.getPreferences().getValue("doTaskAjax", "true").equals("true")){ %>
+									<portlet:resourceURL var="doTaskAjax" id="doTaskAjax">
+										<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>						
+									</portlet:resourceURL>
+									<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax %>')"><fmt:message key="realizar" /></button>
+								<%}else{ %>
+									<portlet:actionURL var="doTask" name="doTask">
+										<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>							
+									</portlet:actionURL>
+									<a href="<%= doTask%>" class="btn btn-primary"><fmt:message key="realizar" /></a>							
+								<%} %>
+							<%} %>
+						</td>
+					<%}else{ %>
+						<td>SI</td>
+						<td>
+							<%if(renderRequest.getPreferences().getValue("useAssignRelease", "true").equals("true")){ %>
+								<portlet:actionURL var="releaseId" name="releaseId">
+									<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
+								</portlet:actionURL>
+								<a href="<%= releaseId%>" class="btn btn-primary"><fmt:message key="liberar" /></a>
+							<%} %>
+													
 							<%if(renderRequest.getPreferences().getValue("doTaskAjax", "true").equals("true")){ %>
-								<portlet:resourceURL var="doTaskAjax" id="doTaskAjax">
+								<portlet:resourceURL var="doTaskAjax2" id="doTaskAjax">
 									<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>						
 								</portlet:resourceURL>
-								<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax %>')"><fmt:message key="realizar" /></button>
+								<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax2 %>')"><fmt:message key="realizar" /></button>
 							<%}else{ %>
-								<portlet:actionURL var="doTask" name="doTask">
+								<portlet:actionURL var="doTask2" name="doTask">
 									<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>							
 								</portlet:actionURL>
-								<a href="<%= doTask%>" class="btn btn-primary"><fmt:message key="realizar" /></a>							
+								<a href="<%= doTask2%>" class="btn btn-primary"><fmt:message key="realizar" /></a>							
 							<%} %>
-						<%} %>
-					</td>
-				<%}else{ %>
-					<td>SI</td>
-					<td>
-						<%if(renderRequest.getPreferences().getValue("useAssignRelease", "true").equals("true")){ %>
-							<portlet:actionURL var="releaseId" name="releaseId">
-								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>
-							</portlet:actionURL>
-							<a href="<%= releaseId%>" class="btn btn-primary"><fmt:message key="liberar" /></a>
-						<%} %>
-												
-						<%if(renderRequest.getPreferences().getValue("doTaskAjax", "true").equals("true")){ %>
-							<portlet:resourceURL var="doTaskAjax2" id="doTaskAjax">
-								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>						
-							</portlet:resourceURL>
-							<button class="btn btn-primary" value="Realizar Tarea" onclick="doTask('<%=doTaskAjax2 %>')"><fmt:message key="realizar" /></button>
-						<%}else{ %>
-							<portlet:actionURL var="doTask2" name="doTask">
-								<portlet:param name="taskId" value="<%=Long.toString(task.getId()) %>"/>							
-							</portlet:actionURL>
-							<a href="<%= doTask2%>" class="btn btn-primary"><fmt:message key="realizar" /></a>							
-						<%} %>
-						
-					</td>
-				<%} %>				
-			</tr>
-		<%} %>
-	</tbody>	
-</table>
+							
+						</td>
+					<%} %>				
+				</tr>
+			<%} %>
+		</tbody>
+	</table>
+</div>
 
 <aui:script>
 	function doTask(url) {
@@ -120,7 +120,6 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
                     window,
                     '<portlet:namespace/>closePopup',
                     function(popupIdToClose) {
-                    	confirm("asdasdad");
                     	var popupDialog = Liferay.Util.Window.getById(popupIdToClose);
                       	popupDialog.destroy();
                       	window.location.href='<%= renderRequest.getAttribute("tasksActionUrl")%>';
@@ -134,6 +133,7 @@ List<Task> tasks= (List<Task>)renderRequest.getAttribute("tasks");
    		//Elimino datos anteriores, en caso de que haya
    		$("#dotask").find(".modal-body").html("");
    		$("#dotask").find(".modal-header h3").html("Task Form");
+   		$("#dotask").find(".btn.close").attr("id","dotask-close");
    		$.ajax({
 			url:url,
 			success:function(data){

@@ -8,7 +8,7 @@
 <fmt:setBundle basename="content.Languaje"/>
 
 <%Task task= (Task)resourceRequest.getAttribute("task"); %>
-<h4><%=task.getProcess().getName() %> - <%=task.getDisplayName() %> - Case ID: <%= task.getCaseId()%> - Task ID: <%=task.getId() %></h4>
+<h4><%=task.getProcess().getDisplayName() %> - <%=task.getDisplayName() %> - Case ID: <%= task.getCaseId()%> - Task ID: <%=task.getId() %></h4>
 <h5><fmt:message key="fechaLimite" />: <%=task.getDueDateString() %></h5>
 <p><%=task.getDisplayDescription() %></p>
 	
