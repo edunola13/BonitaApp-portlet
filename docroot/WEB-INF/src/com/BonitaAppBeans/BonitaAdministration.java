@@ -16,35 +16,45 @@ public class BonitaAdministration {
 	public static String[] especialCharacters= {"+","-","/","%","*","!","?","#","\\","|"};
 	
 	private BonitaConfig config;
+	private PortletSession portletSession; 
 	
-	public BonitaAdministration(HttpServletRequest request) throws SystemException{
+	public BonitaAdministration(HttpServletRequest request, PortletSession portletSession) throws SystemException{
 		this.config= new BonitaConfig(PortalUtil.getCompanyId(request));
+		this.portletSession= portletSession;
 	}
 	
-	public BonitaApi bonitaApi(PortletSession portletSession){
+	public BonitaApi bonitaApi(){
 		BonitaApi bonita= null;
-		if(portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE) != null){
-			if(portletSession.getAttribute("BONITA_API_PORT", PortletSession.APPLICATION_SCOPE) == null){
+		if(this.portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE) != null){
+			if(this.portletSession.getAttribute("BONITA_API_PORT", PortletSession.APPLICATION_SCOPE) == null){
 				System.out.println("## Creando Bonita Api para Sesion");
-				String userName= (String) (portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE));
-				String password= (String) (portletSession.getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));						
+				String userName= (String) (this.portletSession.getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE));
+				String password= (String) (this.portletSession.getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE));						
 				bonita= new BonitaApi(this.config.getVersion(), this.config.getServerUrl(), userName, password);
-				portletSession.setAttribute("BONITA_API_PORT", bonita, PortletSession.APPLICATION_SCOPE);
+				this.portletSession.setAttribute("BONITA_API_PORT", bonita, PortletSession.APPLICATION_SCOPE);
 			}else{
-				bonita= (BonitaApi) portletSession.getAttribute("BONITA_API_PORT", PortletSession.APPLICATION_SCOPE);
+				bonita= (BonitaApi) this.portletSession.getAttribute("BONITA_API_PORT", PortletSession.APPLICATION_SCOPE);
 			}
 		}
 		return bonita;
 	}
-
-	public Boolean isAdmin(PortletSession portletSession){
-		Boolean isAdmin= false;
-		if(portletSession.getAttribute("BONITA_API_ADMIN", PortletSession.APPLICATION_SCOPE) != null){
-			isAdmin= (Boolean) portletSession.getAttribute("BONITA_API_ADMIN", PortletSession.APPLICATION_SCOPE);
+	
+	public BonitaApi bonitaApiLikeAdmin(){
+		if(this.isAdmin()){
+			return this.bonitaApi();
 		}else{
-			BonitaApi bonita= this.bonitaApi(portletSession);
+			return new BonitaApi(this.config.getVersion(), this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
+		}
+	}
+
+	public Boolean isAdmin(){
+		Boolean isAdmin= false;
+		if(this.portletSession.getAttribute("BONITA_API_ADMIN", PortletSession.APPLICATION_SCOPE) != null){
+			isAdmin= (Boolean) this.portletSession.getAttribute("BONITA_API_ADMIN", PortletSession.APPLICATION_SCOPE);
+		}else{
+			BonitaApi bonita= this.bonitaApi();
 			isAdmin= bonita.hasProfile(bonita.actualUser().getId(), this.config.getAdminProfile());
-			portletSession.setAttribute("BONITA_API_ADMIN", isAdmin,PortletSession.APPLICATION_SCOPE);
+			this.portletSession.setAttribute("BONITA_API_ADMIN", isAdmin,PortletSession.APPLICATION_SCOPE);
 		}
 		return isAdmin;
 	}

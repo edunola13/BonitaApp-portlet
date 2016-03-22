@@ -47,17 +47,17 @@ public class BonitaAdminOrg {
 		String bosAction = utils.getUrlParameter(renderRequest, "bosAction");
 		String bosSearch = utils.getUrlParameter(renderRequest, "bosSearch");
 		//Inicializacion de Bonita
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)), renderRequest.getPortletSession());
 		
 		String vista= "viewUsers-adminOrg";
-		if(this.administration.bonitaApi(renderRequest.getPortletSession()) == null){
+		if(this.administration.bonitaApi() == null){
 			return "error-no-login";
-		}else if(!this.administration.bonitaApi(renderRequest.getPortletSession()).getCorrectLogin()){
+		}else if(!this.administration.bonitaApi().getCorrectLogin()){
 			PortletURL updateDataActionUrl= renderResponse.createActionURL();
 			updateDataActionUrl.setParameter(ActionRequest.ACTION_NAME,"updateData");
 			renderRequest.setAttribute("updateDataActionUrl", updateDataActionUrl);
 			return "error-login";
-		}else if(! this.administration.isAdmin(renderRequest.getPortletSession())){
+		}else if(! this.administration.isAdmin()){
 			return "error-login-admin";
 		}else{
 			String action= renderRequest.getParameter("action");
@@ -68,15 +68,15 @@ public class BonitaAdminOrg {
 			}
 			
 			if(action.equals("groups")){
-				List<Group> groups= this.administration.bonitaApi(renderRequest.getPortletSession()).groups(0, 100);
+				List<Group> groups= this.administration.bonitaApi().groups(0, 100);
 				renderRequest.setAttribute("groups", groups);
 				vista= "viewGroups-adminOrg";
 			}else if (action.equals("roles")) {
-				List<Role> roles= this.administration.bonitaApi(renderRequest.getPortletSession()).roles(0, 100);
+				List<Role> roles= this.administration.bonitaApi().roles(0, 100);
 				renderRequest.setAttribute("roles", roles);
 				vista= "viewRoles-adminOrg";
 			}else{
-				List<User> users= this.administration.bonitaApi(renderRequest.getPortletSession()).users(0, 100000);
+				List<User> users= this.administration.bonitaApi().users(0, 100000);
 				renderRequest.setAttribute("users", users);
 				vista= "viewUsers-adminOrg";			
 			}		
@@ -104,7 +104,7 @@ public class BonitaAdminOrg {
 	
 	@ActionMapping(value="updateData")
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
 		this.administration.updateData(request);
 		
@@ -138,9 +138,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="deactivateUser")
 	public void deactivateUser(ActionRequest request, ActionResponse response, @RequestParam long userId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deactivateUser(userId);
+		Boolean exito= this.administration.bonitaApi().deactivateUser(userId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -156,9 +156,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="activateUser")
 	public void activateUser(ActionRequest request, ActionResponse response, @RequestParam long userId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).activeUser(userId);
+		Boolean exito= this.administration.bonitaApi().activeUser(userId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -174,13 +174,13 @@ public class BonitaAdminOrg {
 	 */
 	@ResourceMapping(value="memberships")
 	public String memberships(ResourceRequest request,ResourceResponse response, @RequestParam String userName) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		User user= this.administration.bonitaApi(request.getPortletSession()).user(userName);
+		User user= this.administration.bonitaApi().user(userName);
 		request.setAttribute("user", user);
-		request.setAttribute("roles", this.administration.bonitaApi(request.getPortletSession()).roles(0, 100000));
-		request.setAttribute("groups", this.administration.bonitaApi(request.getPortletSession()).groups(0, 100000));
-		request.setAttribute("memberships", this.administration.bonitaApi(request.getPortletSession()).memberships(user.getId(), 0, 100000));
+		request.setAttribute("roles", this.administration.bonitaApi().roles(0, 100000));
+		request.setAttribute("groups", this.administration.bonitaApi().groups(0, 100000));
+		request.setAttribute("memberships", this.administration.bonitaApi().memberships(user.getId(), 0, 100000));
 		return "adminOrg/assignMembership";
 	}
 	
@@ -190,9 +190,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="assignMembership")
 	public void assignMembership(ActionRequest request, ActionResponse response) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).addMembership(Long.parseLong(request.getParameter("userId")), 
+		Boolean exito= this.administration.bonitaApi().addMembership(Long.parseLong(request.getParameter("userId")), 
 				Long.parseLong(request.getParameter("roleId")), Long.parseLong(request.getParameter("groupId")));
 		if(!exito){
 			SessionErrors.add(request, "error");
@@ -209,11 +209,11 @@ public class BonitaAdminOrg {
 	 */
 	@ResourceMapping(value="formGroup")
 	public String formGroup(ResourceRequest request,ResourceResponse response, @RequestParam long groupId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
 		Group group= new Group();
 		if(groupId != 0){
-			group= this.administration.bonitaApi(request.getPortletSession()).group(groupId);
+			group= this.administration.bonitaApi().group(groupId);
 		}		
 		request.setAttribute("group", group);
 		
@@ -226,9 +226,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="addGroup")
 	public void addGroup(ActionRequest request, ActionResponse response) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Group group= this.administration.bonitaApi(request.getPortletSession()).createGroup(request.getParameter("name"), 
+		Group group= this.administration.bonitaApi().createGroup(request.getParameter("name"), 
 				request.getParameter("displayName"), request.getParameter("description"));
 		if(group == null){
 			SessionErrors.add(request, "error");
@@ -245,9 +245,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="updateGroup")
 	public void updateGroup(ActionRequest request, ActionResponse response) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).updateGroup(Long.parseLong(request.getParameter("groupId")),
+		Boolean exito= this.administration.bonitaApi().updateGroup(Long.parseLong(request.getParameter("groupId")),
 				request.getParameter("name"), request.getParameter("displayName"), request.getParameter("description"));
 		if(!exito){
 			SessionErrors.add(request, "error");
@@ -264,9 +264,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="deleteGroup")
 	public void deleteGroup(ActionRequest request, ActionResponse response, @RequestParam long groupId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deleteGroup(groupId);
+		Boolean exito= this.administration.bonitaApi().deleteGroup(groupId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -282,11 +282,11 @@ public class BonitaAdminOrg {
 	 */
 	@ResourceMapping(value="formRole")
 	public String formRole(ResourceRequest request,ResourceResponse response, @RequestParam long roleId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
 		Role role= new Role();
 		if(roleId != 0){
-			role= this.administration.bonitaApi(request.getPortletSession()).role(roleId);
+			role= this.administration.bonitaApi().role(roleId);
 		}		
 		request.setAttribute("role", role);
 		
@@ -299,9 +299,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="addRole")
 	public void addRole(ActionRequest request, ActionResponse response) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Role role= this.administration.bonitaApi(request.getPortletSession()).createRole(request.getParameter("name"), 
+		Role role= this.administration.bonitaApi().createRole(request.getParameter("name"), 
 				request.getParameter("displayName"), request.getParameter("description"));
 		if(role == null){
 			SessionErrors.add(request, "error");
@@ -318,9 +318,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="updateRole")
 	public void updateRole(ActionRequest request, ActionResponse response) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		System.out.println(request.getParameter("roleId"));
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).updateRole(Long.parseLong(request.getParameter("roleId")),
+		Boolean exito= this.administration.bonitaApi().updateRole(Long.parseLong(request.getParameter("roleId")),
 				request.getParameter("name"), request.getParameter("displayName"), request.getParameter("description"));
 		if(!exito){
 			SessionErrors.add(request, "error");
@@ -337,9 +337,9 @@ public class BonitaAdminOrg {
 	 */
 	@ActionMapping(value="deleteRole")
 	public void deleteRole(ActionRequest request, ActionResponse response, @RequestParam long roleId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deleteRole(roleId);
+		Boolean exito= this.administration.bonitaApi().deleteRole(roleId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{

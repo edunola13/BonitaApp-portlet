@@ -47,12 +47,12 @@ public class BonitaUserController {
 		String bosAction = utils.getUrlParameter(renderRequest, "bosAction");
 		String bosSearch = utils.getUrlParameter(renderRequest, "bosSearch");
 		//Inicializacion de Bonita
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)), renderRequest.getPortletSession());
 		
 		String vista= "viewTasks-user";
-		if(this.administration.bonitaApi(renderRequest.getPortletSession()) == null){
+		if(this.administration.bonitaApi() == null){
 			return "error-no-login";
-		}else if(!this.administration.bonitaApi(renderRequest.getPortletSession()).getCorrectLogin()){
+		}else if(!this.administration.bonitaApi().getCorrectLogin()){
 			PortletURL updateDataActionUrl= renderResponse.createActionURL();
 			updateDataActionUrl.setParameter(ActionRequest.ACTION_NAME,"updateData");
 			renderRequest.setAttribute("updateDataActionUrl", updateDataActionUrl);
@@ -65,18 +65,18 @@ public class BonitaUserController {
 				action= "tasks";
 			}
 			
-			bonitaClass.User user= this.administration.bonitaApi(renderRequest.getPortletSession()).actualUser();
+			bonitaClass.User user= this.administration.bonitaApi().actualUser();
 			
 			if(action.equals("cases")){
-				List<Case> cases= this.administration.bonitaApi(renderRequest.getPortletSession()).cases(user.getId(),0,100);
+				List<Case> cases= this.administration.bonitaApi().cases(user.getId(),0,100);
 				renderRequest.setAttribute("cases", cases);
 				vista= "viewCases-user";
 			}else if (action.equals("processes")) {
-				List<bonitaClass.Process> processes= this.administration.bonitaApi(renderRequest.getPortletSession()).deployedProccessForUser(user.getId());
+				List<bonitaClass.Process> processes= this.administration.bonitaApi().deployedProccessForUser(user.getId());
 				renderRequest.setAttribute("processes", processes);
 				vista= "viewProcesses-user";
 			}else{
-				List<Task> tasks= this.administration.bonitaApi(renderRequest.getPortletSession()).tasks(user.getId(),0,100);
+				List<Task> tasks= this.administration.bonitaApi().tasks(user.getId(),0,100);
 				renderRequest.setAttribute("tasks", tasks);
 				vista= "viewTasks-user";
 				//Si se debe levantar tarea automaticamente despues de iniciar un proceso
@@ -84,7 +84,7 @@ public class BonitaUserController {
 				if(renderRequest.getAttribute("caseId-autoloadTask") != null){
 					//Lo hago dormir un rato para que traiga la ultima tarea, ya que si no, no la traia.
 					Thread.sleep(2500);
-					tasks= this.administration.bonitaApi(renderRequest.getPortletSession()).tasks(user.getId(),0,100);
+					tasks= this.administration.bonitaApi().tasks(user.getId(),0,100);
 					renderRequest.setAttribute("tasks", tasks);
 					Long taskId= this.autoloadTask(tasks, (Long)renderRequest.getAttribute("caseId-autoloadTask"));
 					if(taskId != null) renderRequest.setAttribute("autoload-taskId", taskId);
@@ -124,7 +124,7 @@ public class BonitaUserController {
 	
 	@ActionMapping(value="updateData")
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{	
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
 		/*BonitaApi bon= new BonitaApi(this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
 		String name= (String)request.getPortletSession().getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE);
@@ -168,9 +168,9 @@ public class BonitaUserController {
 	 */
 	@ActionMapping(value="startCase")
 	public void startCase(ActionRequest request, ActionResponse response, @RequestParam long processId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Case caso= this.administration.bonitaApi(request.getPortletSession()).startCase(processId);
+		Case caso= this.administration.bonitaApi().startCase(processId);
 		if(caso == null){
 			SessionErrors.add(request, "error");
 			//response.setRenderParameter("rtaAction", "error");
@@ -189,10 +189,10 @@ public class BonitaUserController {
 	 */
 	@ActionMapping(value="assignId")
 	public void assignId(ActionRequest request, ActionResponse response, @RequestParam long taskId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).assignTask(taskId, user.getId());
+		bonitaClass.User user= this.administration.bonitaApi().actualUser();
+		Boolean exito= this.administration.bonitaApi().assignTask(taskId, user.getId());
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -208,9 +208,9 @@ public class BonitaUserController {
 	 */
 	@ActionMapping(value="releaseId")
 	public void releaseId(ActionRequest request, ActionResponse response, @RequestParam long taskId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).releaseTask(taskId);
+		Boolean exito= this.administration.bonitaApi().releaseTask(taskId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -228,10 +228,10 @@ public class BonitaUserController {
 	 */
 	@ActionMapping(value="doTask")
 	public void doTask(ActionRequest request, ActionResponse response, @RequestParam long taskId) throws SystemException{	
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).assignTask(taskId, user.getId());
+		bonitaClass.User user= this.administration.bonitaApi().actualUser();
+		Boolean exito= this.administration.bonitaApi().assignTask(taskId, user.getId());
 		
 		if(!exito){
 			SessionErrors.add(request, "error");
@@ -246,16 +246,16 @@ public class BonitaUserController {
 	
 	@ResourceMapping(value="doTaskAjax")
 	public String doTaskAjax(ResourceRequest request,ResourceResponse response, @RequestParam long taskId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).assignTask(taskId, user.getId());
+		bonitaClass.User user= this.administration.bonitaApi().actualUser();
+		Boolean exito= this.administration.bonitaApi().assignTask(taskId, user.getId());
 		
 		if(!exito){
 			//SessionErrors.add(request, "error");
 			request.setAttribute("errorAssign", true);
 		}else{
-			Task task= this.administration.bonitaApi(request.getPortletSession()).task(taskId);
+			Task task= this.administration.bonitaApi().task(taskId);
 			if(task != null && task.getState().equals("ready")){
 				request.setAttribute("estado", true);
 				request.setAttribute("task", task);
@@ -280,11 +280,11 @@ public class BonitaUserController {
 		
 	@ResourceMapping(value="actualizeTasks")
 	public String actualizeTasks(ResourceRequest request,ResourceResponse response) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		bonitaClass.User user= this.administration.bonitaApi(request.getPortletSession()).actualUser();
+		bonitaClass.User user= this.administration.bonitaApi().actualUser();
 		
-		List<Task> tasks= this.administration.bonitaApi(request.getPortletSession()).tasks(user.getId(),0,100);
+		List<Task> tasks= this.administration.bonitaApi().tasks(user.getId(),0,100);
 		request.setAttribute("tasks", tasks);
 		
 		return "userApp/tableTasks-user";

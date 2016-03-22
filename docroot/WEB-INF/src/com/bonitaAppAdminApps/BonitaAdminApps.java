@@ -46,17 +46,17 @@ public class BonitaAdminApps {
 		String bosAction = utils.getUrlParameter(renderRequest, "bosAction");
 		String bosSearch = utils.getUrlParameter(renderRequest, "bosSearch");
 		//Inicializacion de Bonita
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)), renderRequest.getPortletSession());
 		
 		String vista= "viewTasks-adminApps";
-		if(this.administration.bonitaApi(renderRequest.getPortletSession()) == null){
+		if(this.administration.bonitaApi() == null){
 			return "error-no-login";
-		}else if(!this.administration.bonitaApi(renderRequest.getPortletSession()).getCorrectLogin()){
+		}else if(!this.administration.bonitaApi().getCorrectLogin()){
 			PortletURL updateDataActionUrl= renderResponse.createActionURL();
 			updateDataActionUrl.setParameter(ActionRequest.ACTION_NAME,"updateData");
 			renderRequest.setAttribute("updateDataActionUrl", updateDataActionUrl);
 			return "error-login";
-		}else if(! this.administration.isAdmin(renderRequest.getPortletSession())){
+		}else if(! this.administration.isAdmin()){
 			return "error-login-admin";
 		}else{
 			String action= renderRequest.getParameter("action");
@@ -67,15 +67,15 @@ public class BonitaAdminApps {
 			}
 			
 			if(action.equals("cases")){
-				List<Case> cases= this.administration.bonitaApi(renderRequest.getPortletSession()).cases(0,10000);
+				List<Case> cases= this.administration.bonitaApi().cases(0,10000);
 				renderRequest.setAttribute("cases", cases);
 				vista= "viewCases-adminApps";
 			}else if (action.equals("processes")) {
-				List<bonitaClass.Process> processes= this.administration.bonitaApi(renderRequest.getPortletSession()).deployedProcesses();
+				List<bonitaClass.Process> processes= this.administration.bonitaApi().deployedProcesses();
 				renderRequest.setAttribute("processes", processes);
 				vista= "viewProcesses-adminApps";
 			}else{
-				List<Task> tasks= this.administration.bonitaApi(renderRequest.getPortletSession()).tasks(0,10000);
+				List<Task> tasks= this.administration.bonitaApi().tasks(0,10000);
 				renderRequest.setAttribute("tasks", tasks);
 				vista= "viewTasks-adminApps";			
 			}		
@@ -103,7 +103,7 @@ public class BonitaAdminApps {
 	
 	@ActionMapping(value="updateData")
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
 		this.administration.updateData(request);
 		
@@ -137,10 +137,10 @@ public class BonitaAdminApps {
 	 */
 	@ResourceMapping(value="assignTask")
 	public String assignTask(ResourceRequest request,ResourceResponse response, @RequestParam long taskId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		request.setAttribute("task", this.administration.bonitaApi(request.getPortletSession()).task(taskId));
-		request.setAttribute("users", this.administration.bonitaApi(request.getPortletSession()).users(0, 100000));
+		request.setAttribute("task", this.administration.bonitaApi().task(taskId));
+		request.setAttribute("users", this.administration.bonitaApi().users(0, 100000));
 		return "adminApp/assignTask-admin";
 	}
 	
@@ -150,9 +150,9 @@ public class BonitaAdminApps {
 	 */
 	@ActionMapping(value="assignId")
 	public void assignId(ActionRequest request, ActionResponse response) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).assignTask(Long.parseLong(request.getParameter("taskId")), Long.parseLong(request.getParameter("userId")));
+		Boolean exito= this.administration.bonitaApi().assignTask(Long.parseLong(request.getParameter("taskId")), Long.parseLong(request.getParameter("userId")));
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -168,9 +168,9 @@ public class BonitaAdminApps {
 	 */
 	@ActionMapping(value="releaseId")
 	public void releaseId(ActionRequest request, ActionResponse response, @RequestParam long taskId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).releaseTask(taskId);
+		Boolean exito= this.administration.bonitaApi().releaseTask(taskId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -186,9 +186,9 @@ public class BonitaAdminApps {
 	 */
 	@ActionMapping(value="deleteCase")
 	public void deleteCase(ActionRequest request, ActionResponse response, @RequestParam long caseId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deleteCase(caseId);
+		Boolean exito= this.administration.bonitaApi().deleteCase(caseId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -204,9 +204,9 @@ public class BonitaAdminApps {
 	 */
 	@ActionMapping(value="disableProcess")
 	public void disableProcess(ActionRequest request, ActionResponse response, @RequestParam long processId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).disableProcess(processId);
+		Boolean exito= this.administration.bonitaApi().disableProcess(processId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -222,9 +222,9 @@ public class BonitaAdminApps {
 	 */
 	@ActionMapping(value="enableProcess")
 	public void enableProcess(ActionRequest request, ActionResponse response, @RequestParam long processId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).enableProcess(processId);
+		Boolean exito= this.administration.bonitaApi().enableProcess(processId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{
@@ -240,9 +240,9 @@ public class BonitaAdminApps {
 	 */
 	@ActionMapping(value="deleteProcess")
 	public void deleteProcess(ActionRequest request, ActionResponse response, @RequestParam long processId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Boolean exito= this.administration.bonitaApi(request.getPortletSession()).deleteProcess(processId);
+		Boolean exito= this.administration.bonitaApi().deleteProcess(processId);
 		if(!exito){
 			SessionErrors.add(request, "error");
 		}else{

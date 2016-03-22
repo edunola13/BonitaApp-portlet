@@ -40,12 +40,12 @@ public class BonitaAdminUserArchived {
 		String bosAction = utils.getUrlParameter(renderRequest, "bosAction");
 		String bosSearch = utils.getUrlParameter(renderRequest, "bosSearch");
 		//Inicializacion de Bonita
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)), renderRequest.getPortletSession());
 		
 		String vista= "viewTasks-userArchived";
-		if(this.administration.bonitaApi(renderRequest.getPortletSession()) == null){
+		if(this.administration.bonitaApi() == null){
 			return "error-no-login";
-		}else if(!this.administration.bonitaApi(renderRequest.getPortletSession()).getCorrectLogin()){
+		}else if(!this.administration.bonitaApi().getCorrectLogin()){
 			PortletURL updateDataActionUrl= renderResponse.createActionURL();
 			updateDataActionUrl.setParameter(ActionRequest.ACTION_NAME,"updateData");
 			renderRequest.setAttribute("updateDataActionUrl", updateDataActionUrl);
@@ -58,14 +58,14 @@ public class BonitaAdminUserArchived {
 				action= "tasks";
 			}
 			
-			bonitaClass.User user= this.administration.bonitaApi(renderRequest.getPortletSession()).actualUser();
+			bonitaClass.User user= this.administration.bonitaApi().actualUser();
 			
 			if(action.equals("cases")){
-				List<Case> cases= this.administration.bonitaApi(renderRequest.getPortletSession()).archivedCases(user.getId(), 0, 100000);
+				List<Case> cases= this.administration.bonitaApi().archivedCases(user.getId(), 0, 100000);
 				renderRequest.setAttribute("cases", cases);
 				vista= "viewCases-userArchived";
 			}else{
-				List<Task> tasks= this.administration.bonitaApi(renderRequest.getPortletSession()).archivedHumanTask(user.getId(), 0, 1000000);
+				List<Task> tasks= this.administration.bonitaApi().archivedHumanTask(user.getId(), 0, 1000000);
 				renderRequest.setAttribute("tasks", tasks);
 				vista= "viewTasks-userArchived";			
 			}		
@@ -90,7 +90,7 @@ public class BonitaAdminUserArchived {
 	
 	@ActionMapping(value="updateData")
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
 		this.administration.updateData(request);
 		

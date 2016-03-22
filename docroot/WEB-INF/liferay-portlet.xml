@@ -12,6 +12,21 @@
 		<css-class-wrapper>bonitaApp-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>bonitaApp-task</portlet-name>
+		<icon>/icon.png</icon>
+		<private-session-attributes>false</private-session-attributes>
+		<css-class-wrapper>bonitaApp-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>bonitaApp-controlPanel</portlet-name>
+		<icon>/icon.png</icon>
+		<configuration-action-class>com.bonitaAppControlPanel.ConfigurationActionImpl</configuration-action-class>
+		<private-session-attributes>false</private-session-attributes>
+		<footer-portlet-javascript>/js/jquery.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/jquery.dataTables.js</footer-portlet-javascript>		
+		<css-class-wrapper>bonitaApp-controlPanel</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>bonitaApp-userArchived</portlet-name>
 		<icon>/icon.png</icon>
 		<configuration-action-class>com.bonitaAppUserArchived.ConfigurationActionImpl</configuration-action-class>
@@ -37,13 +52,7 @@
 		<footer-portlet-javascript>/js/jquery.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/jquery.dataTables.js</footer-portlet-javascript>		
 		<css-class-wrapper>bonitaApp-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>bonitaApp-task</portlet-name>
-		<icon>/icon.png</icon>
-		<private-session-attributes>false</private-session-attributes>
-		<css-class-wrapper>bonitaApp-portlet</css-class-wrapper>
-	</portlet>
+	</portlet>	
 	
 	<role-mapper>
 		<role-name>administrator</role-name>

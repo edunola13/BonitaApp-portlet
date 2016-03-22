@@ -30,7 +30,7 @@ public class BonitaTaskController {
 	
 	@RenderMapping()
 	public String view(RenderRequest request, RenderResponse response) throws PortletException, IOException, SystemException {
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)));
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
 		long userId= 0;
 		if(request.getParameter("userId") != null)userId= Long.parseLong(request.getParameter("userId"));
@@ -38,7 +38,7 @@ public class BonitaTaskController {
 		if(request.getParameter("taskId") != null)taskId= Long.parseLong(request.getParameter("taskId"));
 		
 		if(userId != 0){
-			Task task= this.administration.bonitaApi(request.getPortletSession()).task(taskId);
+			Task task= this.administration.bonitaApi().task(taskId);
 			if(task != null && task.getState().equals("ready")){
 				request.setAttribute("estado", true);
 				request.setAttribute("task", task);

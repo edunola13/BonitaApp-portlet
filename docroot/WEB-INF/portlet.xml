@@ -43,6 +43,81 @@
 	</portlet>
 	
 	<portlet>
+		<portlet-name>bonitaApp-task</portlet-name>
+		<display-name>BonitaApp Task</display-name>
+		
+		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+		<init-param>
+			<name>contextConfigLocation</name>
+			<value>/WEB-INF/config/springConfig-task.xml</value>
+		</init-param>
+		
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>BonitaApp Task</title>
+			<short-title>BonitaApp Task</short-title>
+			<keywords>BonitaApp Task</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-processing-event xmlns:x='http://BontaAppLiferay.com'>
+        	<qname>x:doTask</qname>
+        </supported-processing-event>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>bonitaApp-controlPanel</portlet-name>
+		<display-name>BonitaApp Control Panel</display-name>
+		
+		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+		<init-param>
+			<name>contextConfigLocation</name>
+			<value>/WEB-INF/config/springConfig-controlPanel.xml</value>
+		</init-param>
+		<init-param>
+        	<name>config-template</name>
+        	<value>/WEB-INF/views/preferences/configuration.jsp</value>
+    	</init-param>
+    	
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>BonitaApp Control Panel</title>
+			<short-title>BonitaApp Control Panel</short-title>
+			<keywords>BonitaApp Control Panel</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	
+	<portlet>
 		<portlet-name>bonitaApp-userArchived</portlet-name>
 		<display-name>BonitaApp-UserArchived</display-name>
 		
@@ -155,43 +230,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-	<portlet>
-		<portlet-name>bonitaApp-task</portlet-name>
-		<display-name>BonitaApp Task</display-name>
 		
-		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
-		<init-param>
-			<name>contextConfigLocation</name>
-			<value>/WEB-INF/config/springConfig-task.xml</value>
-		</init-param>
-		
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>BonitaApp Task</title>
-			<short-title>BonitaApp Task</short-title>
-			<keywords>BonitaApp Task</keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-		<supported-processing-event xmlns:x='http://BontaAppLiferay.com'>
-        	<qname>x:doTask</qname>
-        </supported-processing-event>
-	</portlet>
 		
 <!-- 	<portlet> -->
 <!-- 		<portlet-name>config-bonita</portlet-name> -->
