@@ -7,6 +7,7 @@
 
 <%
 List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
+String initVar= (String)renderRequest.getAttribute("bosInitVar");
 %>
 
 <div id="bonita-userApps">
@@ -30,6 +31,7 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 				<td>
 					<portlet:actionURL var="startCase" name="startCase">
 						<portlet:param name="processId" value="<%=Long.toString(process.getId()) %>"/>
+						<portlet:param name="initVar" value="<%=initVar %>"/>
 					</portlet:actionURL>
 					<a href="<%= startCase%>" class="btn btn-primary" onclick="return confirm('<fmt:message key="confirm-iniciarCaso" />')"><fmt:message key="iniciarCaso" /></a>
 				</td>

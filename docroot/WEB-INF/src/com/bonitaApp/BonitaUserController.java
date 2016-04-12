@@ -1,5 +1,6 @@
 package com.bonitaApp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -30,6 +31,7 @@ import com.liferay.portal.util.PortalUtil;
 
 import bonitaClass.Case;
 import bonitaClass.Task;
+import bonitaClass.Variable;
 
 @Controller("UserController")
 @RequestMapping(value = "VIEW")
@@ -46,6 +48,7 @@ public class BonitaUserController {
 		//Url Parameters
 		String bosAction = utils.getUrlParameter(renderRequest, "bosAction");
 		String bosSearch = utils.getUrlParameter(renderRequest, "bosSearch");
+		String bosInitVar = utils.getUrlParameter(renderRequest, "bosInitVar");
 		//Inicializacion de Bonita
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(renderRequest)), renderRequest.getPortletSession());
 		
@@ -74,6 +77,8 @@ public class BonitaUserController {
 			}else if (action.equals("processes")) {
 				List<bonitaClass.Process> processes= this.administration.bonitaApi().deployedProccessForUser(user.getId());
 				renderRequest.setAttribute("processes", processes);
+				if(bosInitVar == null) bosInitVar= "none";
+				renderRequest.setAttribute("bosInitVar", bosInitVar);
 				vista= "viewProcesses-user";
 			}else{
 				List<Task> tasks= this.administration.bonitaApi().tasks(user.getId(),0,100);
@@ -167,10 +172,20 @@ public class BonitaUserController {
 	 * @throws SystemException 
 	 */
 	@ActionMapping(value="startCase")
-	public void startCase(ActionRequest request, ActionResponse response, @RequestParam long processId) throws SystemException{
+	public void startCase(ActionRequest request, ActionResponse response, @RequestParam long processId, @RequestParam String initVar) throws SystemException{
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		Case caso= this.administration.bonitaApi().startCase(processId);
+		List<Variable> variables= new ArrayList<Variable>();
+		if(! initVar.equals("none")){			
+			String[] vars= initVar.split("$");
+			int cant= vars.length;
+			for(int i= 0; i < cant; i++){
+				String[] var= vars[i].split("=");
+				System.out.println(var[0] + "-" + var[1]);
+				variables.add(new Variable(var[0], var[1]));
+			}
+		}
+		Case caso= this.administration.bonitaApi().startCase(processId, variables);
 		if(caso == null){
 			SessionErrors.add(request, "error");
 			//response.setRenderParameter("rtaAction", "error");
