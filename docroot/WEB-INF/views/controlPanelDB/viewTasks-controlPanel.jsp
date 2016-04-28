@@ -7,13 +7,14 @@
 
 <%
 Case caso= (Case)resourceRequest.getAttribute("case");
+String estado= (String)resourceRequest.getAttribute("estado");
 List<Task> tasks= (List<Task>)resourceRequest.getAttribute("tasks");
 List<Task> archivedTasks= (List<Task>)resourceRequest.getAttribute("archivedTasks");
 %>
 
 <%if(caso != null){ %>
 <h4><fmt:message key="caso" />: <%=caso.getId() %> - <fmt:message key="alcanzada"/>: <%=caso.getBeginDateString() %> <%if(caso.getEndDate() != null){ %>- <fmt:message key="finalizada"/>: <%=caso.getEndDateString() %> <%} %></h4>
-
+as
 
 <%if(tasks != null){ %>
 <h5>Tareas Activas</h5>
@@ -89,6 +90,8 @@ List<Task> archivedTasks= (List<Task>)resourceRequest.getAttribute("archivedTask
 	</tbody>	
 </table>
 
-<% }else{ %>
+<% }else if(estado == null){ %>
 	<h4>Seleccione una Instancia del Proceso</h4>
+<%} else{%>
+	<h4>El Proceso se ha Completado</h4>
 <%} %>

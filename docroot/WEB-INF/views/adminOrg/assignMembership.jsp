@@ -13,7 +13,10 @@
 <h5><fmt:message key="membresias-actuales" /></h5>
 <%List<Membership> memberships= (List<Membership>)resourceRequest.getAttribute("memberships"); %>
 <%for(Membership membership : memberships){ %>
-	<p><%=membership.getRole().getDisplayName()%> <fmt:message key="membresias-de" /> <%=membership.getGroup().getDisplayName()%></p>
+	<p>
+		<button class="btn btn-primary btn-mini pull-right"  onclick="deleteMembership(event, '<%= membership.getUserId()%>', '<%= membership.getRole().getId()%>', '<%= membership.getGroup().getId()%>')"><span class="icon-trash"></span></button>
+		<%=membership.getRole().getDisplayName()%> <fmt:message key="membresias-de" /> <%=membership.getGroup().getDisplayName()%>		
+	</p>
 <%} %>	
 
 <h5><fmt:message key="membresias-nueva" /></h5>

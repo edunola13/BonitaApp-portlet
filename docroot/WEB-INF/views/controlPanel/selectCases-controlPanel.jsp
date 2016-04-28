@@ -7,9 +7,9 @@
 List<Case> cases= (List<Case>)resourceRequest.getAttribute("cases");
 %>
 
-<select class="span12" onchange="changeCase()">
+<select id="bpmPanel-selectCases" class="span12" onchange="changeCase()">
 	<option value="0">Seleccione un Caso</option>
 	<%for(Case caso: cases) { %>					
-		<option value="<%= caso.getId()%>"><%= caso.getId()%></option>		  			
+		<option value="<%= caso.getId() %>"><%= caso.getId() %></option>		  			
 	<%} %>
 </select>

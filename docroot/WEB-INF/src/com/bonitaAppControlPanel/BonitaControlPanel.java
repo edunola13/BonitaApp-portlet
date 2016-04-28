@@ -88,11 +88,6 @@ public class BonitaControlPanel {
 	public void updateData(ActionRequest request, ActionResponse response) throws PortalException, SystemException{	
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 		
-		/*BonitaApi bon= new BonitaApi(this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
-		String name= (String)request.getPortletSession().getAttribute("BONITA_APP_USER_NAME" ,PortletSession.APPLICATION_SCOPE);
-		String pass= (String)request.getPortletSession().getAttribute("BONITA_APP_USER_PASS" ,PortletSession.APPLICATION_SCOPE);
-		bonitaClass.User user= bon.user(name);
-		bon.updateUser(user.getId(), name, pass, pass, user.getFirstName(), user.getLastName(), true);*/
 		this.administration.updateData(request);
 		
 		request.getPortletSession().setAttribute("BONITA_API_PORT", null, PortletSession.APPLICATION_SCOPE);
@@ -107,14 +102,14 @@ public class BonitaControlPanel {
 		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "cases");
 	}
-	
+		
 	@ActionMapping(value="archivedCases")
 	public void archivedCases(ActionRequest request, ActionResponse response){
 		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "archivedCases");
 	}
-		
-		
+	
+	
 	@ResourceMapping(value="actualizeCases")
 	public String actualizeCases(ResourceRequest request,ResourceResponse response, @RequestParam long processId) throws SystemException{
 		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
@@ -133,33 +128,38 @@ public class BonitaControlPanel {
 		request.setAttribute("cases", cases);
 		
 		return "controlPanel/selectCases-controlPanel";
-	}
+	}	
+		
 	
 	@ResourceMapping(value="actualizePanel")
-	public String actualizePanel(ResourceRequest request,ResourceResponse response, @RequestParam long caseId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
-				
-		Case caso= this.administration.bonitaApi().caseById(caseId);
-		BonitaApi bonitaAdmin= this.administration.bonitaApiLikeAdmin();
-		List<Task> tasks= bonitaAdmin.tasksCase(caseId, "");
-		List<Task> archivedTasks= bonitaAdmin.archivedTaskCase(caseId, true, "");
-		request.setAttribute("case", caso);
-		request.setAttribute("tasks", tasks);
-		request.setAttribute("archivedTasks", archivedTasks);
+	public String actualizePanel(ResourceRequest request,ResourceResponse response, @RequestParam long caseId) throws SystemException{				
+		if(caseId != 0){
+			this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
+			
+			Case caso= this.administration.bonitaApi().caseById(caseId);
+			BonitaApi bonitaAdmin= this.administration.bonitaApiLikeAdmin();
+			List<Task> tasks= bonitaAdmin.tasksCase(caseId, "");
+			List<Task> archivedTasks= bonitaAdmin.archivedTaskCase(caseId, true, "");
+			request.setAttribute("case", caso);
+			request.setAttribute("tasks", tasks);
+			request.setAttribute("archivedTasks", archivedTasks);
+		}
 		
 		return "controlPanel/viewTasks-controlPanel";
 	}
 	
 	@ResourceMapping(value="actualizeArchivedPanel")
-	public String actualizeArchivedPanel(ResourceRequest request,ResourceResponse response, @RequestParam long caseId) throws SystemException{
-		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
-				
-		Case caso= this.administration.bonitaApi().archivedCaseById(caseId);
-		BonitaApi bonitaAdmin= this.administration.bonitaApiLikeAdmin();
-		List<Task> archivedTasks= bonitaAdmin.archivedTaskCase(caso.getRootCaseId(), true, "");
-		request.setAttribute("case", caso);
-		request.setAttribute("archivedTasks", archivedTasks);
-		
+	public String actualizeArchivedPanel(ResourceRequest request,ResourceResponse response, @RequestParam long caseId) throws SystemException{				
+		if(caseId != 0){
+			this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
+			
+			Case caso= this.administration.bonitaApi().archivedCaseById(caseId);
+			BonitaApi bonitaAdmin= this.administration.bonitaApiLikeAdmin();
+			List<Task> archivedTasks= bonitaAdmin.archivedTaskCase(caso.getRootCaseId(), true, "");
+			request.setAttribute("case", caso);
+			request.setAttribute("archivedTasks", archivedTasks);
+		}
+			
 		return "controlPanel/viewTasks-controlPanel";
 	}
 }

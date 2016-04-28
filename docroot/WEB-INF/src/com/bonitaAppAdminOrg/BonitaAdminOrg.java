@@ -10,6 +10,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -201,6 +202,19 @@ public class BonitaAdminOrg {
 		}
 		request.setAttribute("scrollToPortlet", "true");
 		response.setRenderParameter("action", "users");
+	}
+	
+	/**
+	 * Formulario para ver y asignar nueva membresia
+	 * @throws SystemException 
+	 */
+	@ResourceMapping(value="removeMembership")
+	public void removeMembership(ResourceRequest request,ResourceResponse response, @RequestParam long userId, @RequestParam long roleId, @RequestParam long groupId) throws SystemException{
+		this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
+		
+		if(! this.administration.bonitaApi().removeMembership(userId, roleId, groupId)){		
+			response.setProperty(ResourceResponse.HTTP_STATUS_CODE, Integer.toString(HttpServletResponse.SC_BAD_REQUEST));
+		}
 	}
 	
 	/**

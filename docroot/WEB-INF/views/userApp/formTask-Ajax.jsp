@@ -12,7 +12,7 @@
 <%}else{ %>
 	<%if((Boolean)resourceRequest.getAttribute("estado")){ %>
 		<%Task task= (Task)resourceRequest.getAttribute("task"); %>
-		<h5><fmt:message key="fechaLimite"/>: <%=task.getDueDateString() %></h5>
+<%-- 		<h5><fmt:message key="fechaLimite"/>: <%=task.getDueDateString() %></h5> --%>
 		<p><%=task.getDisplayDescription() %></p>	
 	
 		<form id="bonitaform" target="iframe" method="post" action="<%=resourceRequest.getAttribute("url")%>"> 
@@ -26,7 +26,7 @@
 		<script type="text/javascript">/*<![CDATA[*/
 			document.getElementById("bonitaform").submit();
 			document.getElementById("bonitaform").remove();
-			$("#dotask").find(".modal-header h3").html("<%=task.getProcess().getDisplayName() %> - <%=task.getDisplayName() %> - <fmt:message key="casoId"/>: <%= task.getCaseId()%> - <fmt:message key="tareaId"/>: <%=task.getId() %>");
+			$("#dotask").find(".modal-header h3").html("<%=task.getProcess().getDisplayName() %> - <%=task.getDisplayName() %>");
 		/*]]>*/</script>
 	<% }else{%>
 		<h5><fmt:message key="tareaCompletada"/></h5>

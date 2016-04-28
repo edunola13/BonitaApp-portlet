@@ -17,6 +17,7 @@
 boolean title = GetterUtil.getBoolean(portletPreferences.getValue("title", StringPool.FALSE));
 boolean doTaskAjax = GetterUtil.getBoolean(portletPreferences.getValue("doTaskAjax", StringPool.TRUE));
 boolean useAssignRelease = GetterUtil.getBoolean(portletPreferences.getValue("useAssignRelease", StringPool.TRUE));
+boolean confirmStartCase = GetterUtil.getBoolean(portletPreferences.getValue("confirmStartCase", StringPool.TRUE));
 boolean updateInbox = GetterUtil.getBoolean(portletPreferences.getValue("updateInbox", StringPool.TRUE));
 String updateInterval= portletPreferences.getValue("updateInterval", "300");
 %>
@@ -27,6 +28,7 @@ String updateInterval= portletPreferences.getValue("updateInterval", "300");
 	<aui:input label="Show Title" name="preferences--title--" type="checkbox" value="<%= title %>" />
     <aui:input label="Task Form - Pop Up" name="preferences--doTaskAjax--" type="checkbox" value="<%= doTaskAjax %>" />
     <aui:input label="Use Assign/Release" name="preferences--useAssignRelease--" type="checkbox" value="<%= useAssignRelease %>" />
+    <aui:input label="Confirm Start Case" name="preferences--confirmStartCase--" type="checkbox" value="<%= confirmStartCase %>" />
     <aui:input label="Update Inbox" name="preferences--updateInbox--" type="checkbox" value="<%= updateInbox %>" />
     <aui:input label="Update Interval(Seconds)" name="preferences--updateInterval--" type="text" value='<%= updateInterval %>' />
 

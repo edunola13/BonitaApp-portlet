@@ -3,6 +3,7 @@
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> 
 <%@ page import="bonitaClass.Process" %>
+<%@ page import="bonitaClass.Case" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <portlet:defineObjects />
@@ -20,15 +21,15 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 
 <div id="selects-controlPanel" style="min-height: 30px;">
 	<div class="span6 select-process">
-		<select class="span12" onchange="changeProcess()">
+		<select id="bpmPanel-selectProcess" class="selectpicker span12" data-live-search="true" onchange="changeProcess()">
 			<option value="0">Seleccione un Proceso</option>
-			<%for(Process process: processes) { %>					
-		  		<option value="<%= process.getId()%>"><%= process.getDisplayName()%></option>		  			
+			<%for(Process process: processes) { %>
+		  		<option value="<%= process.getId()%>"><%= process.getDisplayName()%></option>	  			
 		  	<%} %>
 		</select>
 	</div>
 	<div class="span6 select-case">
-		<select class="span12" onchange="changeCase()">
+		<select id="bpmPanel-selectCases" class="span12" onchange="changeCase()">
 			<option value="0">Seleccione un Caso</option>
 		</select>
 	</div>
@@ -62,6 +63,7 @@ List<Process> processes= (List<Process>)renderRequest.getAttribute("processes");
 					alert("error");	
 				}				
 			});
+			
 		}
 		<% }else{ %>
 		function changeProcess(){

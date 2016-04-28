@@ -60,6 +60,8 @@ List<User> users= (List<User>)renderRequest.getAttribute("users");
 	</tbody>
 </table>
 
+<portlet:resourceURL var="removeMembership" id="removeMembership"></portlet:resourceURL>
+
 <aui:script>
 	function memberships(url) {
   		AUI().use( 'aui-io-deprecated',
@@ -101,6 +103,27 @@ List<User> users= (List<User>)renderRequest.getAttribute("users");
 			}				
 		});
   	}	
+	
+	function deleteMembership(event, userId, roleId, groupId){
+		$.ajax({
+			url:"<%= removeMembership%>",
+			data:{
+				'<portlet:namespace/>userId':userId,
+				'<portlet:namespace/>roleId':roleId,
+				'<portlet:namespace/>groupId':groupId
+			},
+			success:function(html){
+				if($(event.target).parent().get(0).tagName == "BUTTON"){
+					$(event.target).parent().parent().remove();
+				}else{
+					$(event.target).parent().remove();
+				}
+			},
+			error: function(){
+				alert("error");	
+			}				
+		});
+	}
 </aui:script>
 
 <jsp:include page="../../view-sections/footer-adminOrg.jsp"></jsp:include>

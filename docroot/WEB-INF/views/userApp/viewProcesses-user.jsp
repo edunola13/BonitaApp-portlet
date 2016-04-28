@@ -33,7 +33,11 @@ String initVar= (String)renderRequest.getAttribute("bosInitVar");
 						<portlet:param name="processId" value="<%=Long.toString(process.getId()) %>"/>
 						<portlet:param name="initVar" value="<%=initVar %>"/>
 					</portlet:actionURL>
-					<a href="<%= startCase%>" class="btn btn-primary" onclick="return confirm('<fmt:message key="confirm-iniciarCaso" />')"><fmt:message key="iniciarCaso" /></a>
+					<%if(renderRequest.getPreferences().getValue("confirmStartCase", "true").equals("true")){ %>
+						<a href="<%= startCase%>" class="btn btn-primary" onclick="return confirm('<fmt:message key="confirm-iniciarCaso" />')"><fmt:message key="iniciarCaso" /></a>
+					<%}else{ %>
+						<a href="<%= startCase%>" class="btn btn-primary"><fmt:message key="iniciarCaso" /></a>
+					<%} %>
 				</td>
 			</tr>
 		<%} %>

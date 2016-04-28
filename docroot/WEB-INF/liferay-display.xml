@@ -8,6 +8,7 @@
 		<portlet id="bonitaApp-controlPanel" />
 		<portlet id="bonitaApp-userArchived" />
 		<portlet id="bonitaApp-adminApps" />
-		<portlet id="bonitaApp-adminOrg" />		
+		<portlet id="bonitaApp-adminOrg" />
+		<portlet id="bonitaApp-controlPanelDB" />
 	</category>
 </display>
