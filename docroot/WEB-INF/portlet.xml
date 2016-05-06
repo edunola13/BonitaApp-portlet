@@ -242,7 +242,7 @@
 		</init-param>
 		<init-param>
         	<name>config-template</name>
-        	<value>/WEB-INF/views/preferences/configuration-basic.jsp</value>
+        	<value>/WEB-INF/views/preferences/configuration-db.jsp</value>
     	</init-param>
     	
 		<expiration-cache>0</expiration-cache>

@@ -14,7 +14,6 @@ List<Task> archivedTasks= (List<Task>)resourceRequest.getAttribute("archivedTask
 
 <%if(caso != null){ %>
 <h4><fmt:message key="caso" />: <%=caso.getId() %> - <fmt:message key="alcanzada"/>: <%=caso.getBeginDateString() %> <%if(caso.getEndDate() != null){ %>- <fmt:message key="finalizada"/>: <%=caso.getEndDateString() %> <%} %></h4>
-as
 
 <%if(tasks != null){ %>
 <h5>Tareas Activas</h5>

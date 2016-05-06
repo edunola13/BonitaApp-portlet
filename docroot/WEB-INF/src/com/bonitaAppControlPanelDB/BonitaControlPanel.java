@@ -5,9 +5,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -27,6 +29,7 @@ import com.bonitaAppBeans.AppUtils;
 import com.bonitaAppBeans.BonitaAdministration;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.model.PortletPreferences;
 import com.liferay.portal.util.PortalUtil;
 
 import bonitaApi.BonitaApi;
@@ -71,9 +74,9 @@ public class BonitaControlPanel {
 				vista= "viewCases-controlPanel";
 			}else {
 				vista= "viewCases-controlPanel";
-			}	
+			}
 			
-			List<String[]> processes= this.procesos();
+			List<String[]> processes= this.procesos(renderRequest);
 			renderRequest.setAttribute("processes", processes);
 			
 			PortletURL casesActionUrl= renderResponse.createActionURL();
@@ -94,28 +97,48 @@ public class BonitaControlPanel {
 		return "controlPanelDB/" + vista;
 	}
 	
-	private List<String[]> procesos(){
+	private java.sql.Connection conexion(PortletRequest request){
 		try{  
 			//step1 load the driver class  
 			Class.forName("oracle.jdbc.driver.OracleDriver");  
 			  
-			//step2 create  the connection object  
-			java.sql.Connection con= DriverManager.getConnection("jdbc:oracle:thin:@10.36.0.17:1521:XE","MUNICIPIO","123456");
-//			java.sql.Connection con= DriverManager.getConnection("jdbc:oracle:thin:@10.1.1.3:1521:DESA","MUNICIPIO","MUNICIPIO"); 
-			  
-			//step3 create the statement object  
-			Statement stmt=con.createStatement();  
-			  
-			//step4 execute query  
-			ResultSet rs=stmt.executeQuery("select COD_TIPO_TRAMITE, DESCRIPCION from TR_TIPOS_TRAMITE");
-			List<String[]> tipos= new ArrayList<String[]>();			
-			while(rs.next()){
-				String[] elems= {rs.getString(1), rs.getString(2)};
-				tipos.add(elems);
-			}
+			String host= request.getPreferences().getValue("host", "10.36.0.17");
+			String port= request.getPreferences().getValue("port", "1521");
+			String schema= request.getPreferences().getValue("schema", "XE");
+			String user= request.getPreferences().getValue("user", "MUNICIPIO");
+			String pass= request.getPreferences().getValue("pass", "123456");
 			
-			//step5 close the connection object  
-			con.close();
+			//step2 create  the connection object  
+			java.sql.Connection con= DriverManager.getConnection("jdbc:oracle:thin:@"+host+":"+port+":"+schema,user,pass);
+//			java.sql.Connection con= DriverManager.getConnection("jdbc:oracle:thin:@10.1.1.3:1521:DESA","MUNICIPIO","MUNICIPIO");
+			
+			
+			return con;
+		}catch(Exception e){
+			System.out.println(e);
+			return null;			
+		}  
+	}
+	
+	private List<String[]> procesos(PortletRequest request){
+		try{
+			List<String[]> tipos= new ArrayList<String[]>();	
+			if(request.getPreferences().getValue("active", "false").equals("true")){
+				java.sql.Connection con= this.conexion(request); 
+				  
+				//step3 create the statement object  
+				Statement stmt=con.createStatement();  
+				  
+				//step4 execute query  
+				ResultSet rs=stmt.executeQuery("select COD_TIPO_TRAMITE, DESCRIPCION from TR_TIPOS_TRAMITE");						
+				while(rs.next()){
+					String[] elems= {rs.getString(1), rs.getString(2)};
+					tipos.add(elems);
+				}
+				
+				//step5 close the connection object  
+				con.close();
+			}
 			
 			return tipos;
 		}catch(Exception e){
@@ -124,28 +147,26 @@ public class BonitaControlPanel {
 		}  
 	}
 	
-	private List<String[]> instancias(String tipoT){
+	private List<String[]> instancias(PortletRequest request, String tipoT){
 		try{  
-			//step1 load the driver class  
-			Class.forName("oracle.jdbc.driver.OracleDriver");  
-			  
-			//step2 create  the connection object  
-			java.sql.Connection con= DriverManager.getConnection("jdbc:oracle:thin:@10.36.0.17:1521:XE","MUNICIPIO","123456");
-//			java.sql.Connection con= DriverManager.getConnection("jdbc:oracle:thin:@10.1.1.3:1521:DESA","MUNICIPIO","MUNICIPIO"); 
-			  
-			//step3 create the statement object  
-			Statement stmt=con.createStatement();  
-			  
-			//step4 execute query  
-			ResultSet rs=stmt.executeQuery("select t.ID_PROCESO, t.ID_TRAMITE, p.NRO_PARTIDA, t.NOMBRE from TR_TRAMITES t left join RE_PARTIDAS p on t.ID_PARTIDA = p.ID_PARTIDA where COD_TIPO_TRAMITE = '" + tipoT + "'");
-			List<String[]> tipos= new ArrayList<String[]>();			
-			while(rs.next()){
-				String[] elems= {rs.getString(1), rs.getString(2), rs.getString(2), rs.getString(4)};
-				tipos.add(elems);
-			} 
+			List<String[]> tipos= new ArrayList<String[]>();
 			
-			//step5 close the connection object  
-			con.close();
+			if(request.getPreferences().getValue("active", "false").equals("true")){
+				java.sql.Connection con= this.conexion(request);
+				  
+				//step3 create the statement object  
+				Statement stmt=con.createStatement();  
+				  
+				//step4 execute query  
+				ResultSet rs=stmt.executeQuery("select t.ID_PROCESO, t.ID_TRAMITE, p.NRO_PARTIDA, t.NOMBRE from TR_TRAMITES t left join RE_PARTIDAS p on t.ID_PARTIDA = p.ID_PARTIDA where COD_TIPO_TRAMITE = '" + tipoT + "'");
+				while(rs.next()){
+					String[] elems= {rs.getString(1), rs.getString(2), rs.getString(2), rs.getString(4)};
+					tipos.add(elems);
+				} 
+				
+				//step5 close the connection object  
+				con.close();
+			}
 			
 			return tipos;
 		}catch(Exception e){
@@ -167,23 +188,23 @@ public class BonitaControlPanel {
 	}
 	
 	
-	@ActionMapping(value="cases")
-	public void cases(ActionRequest request, ActionResponse response){
-		request.setAttribute("scrollToPortlet", "true");
-		response.setRenderParameter("action", "cases");
-	}
-		
-	@ActionMapping(value="archivedCases")
-	public void archivedCases(ActionRequest request, ActionResponse response){
-		request.setAttribute("scrollToPortlet", "true");
-		response.setRenderParameter("action", "archivedCases");
-	}
+//	@ActionMapping(value="cases")
+//	public void cases(ActionRequest request, ActionResponse response){
+//		request.setAttribute("scrollToPortlet", "true");
+//		response.setRenderParameter("action", "cases");
+//	}
+//		
+//	@ActionMapping(value="archivedCases")
+//	public void archivedCases(ActionRequest request, ActionResponse response){
+//		request.setAttribute("scrollToPortlet", "true");
+//		response.setRenderParameter("action", "archivedCases");
+//	}
 	
 	
 	@ActionMapping(value="actualizeCases")
 	public void actualizeCases(ActionRequest request, ActionResponse response, @RequestParam String tipoT) throws SystemException{
 		
-		List<String[]> cases= this.instancias(tipoT);
+		List<String[]> cases= this.instancias(request, tipoT);
 		
 		request.setAttribute("cases", cases);
 		request.setAttribute("tipoT", tipoT);
@@ -205,7 +226,7 @@ public class BonitaControlPanel {
 		if(caseId != 0){
 			this.administration= new BonitaAdministration((PortalUtil.getHttpServletRequest(request)), request.getPortletSession());
 			
-			Case caso= this.administration.bonitaApi().caseById(20008L);
+			Case caso= this.administration.bonitaApi().caseById(caseId);
 			BonitaApi bonitaAdmin= this.administration.bonitaApiLikeAdmin();
 			
 			if(caso != null){			
@@ -215,7 +236,7 @@ public class BonitaControlPanel {
 				request.setAttribute("archivedTasks", archivedTasks);
 				
 			}else{
-				caso= this.administration.bonitaApi().archivedCaseById(20008L);
+				caso= this.administration.bonitaApi().archivedCaseById(caseId);
 				if(caso != null){
 					List<Task> archivedTasks= bonitaAdmin.archivedTaskCase(caso.getRootCaseId(), true, "");
 					request.setAttribute("archivedTasks", archivedTasks);
