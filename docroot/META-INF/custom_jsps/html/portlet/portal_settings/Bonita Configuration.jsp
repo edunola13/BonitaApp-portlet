@@ -22,6 +22,7 @@
 <%
 String version  = PrefsPropsUtil.getString(company.getCompanyId(), "bonita.version");
 String serverUrl  = PrefsPropsUtil.getString(company.getCompanyId(), "bonita.serverUrl");
+String serverUrlForm  = PrefsPropsUtil.getString(company.getCompanyId(), "bonita.serverUrlForm");
 String userAdmin  = PrefsPropsUtil.getString(company.getCompanyId(), "bonita.userAdmin");
 String passAdmin  = PrefsPropsUtil.getString(company.getCompanyId(), "bonita.passAdmin");
 String adminProfile  = PrefsPropsUtil.getString(company.getCompanyId(), "bonita.adminProfile");
@@ -38,6 +39,11 @@ String username  = PrefsPropsUtil.getString(company.getCompanyId(), "bonita.user
 		</aui:input>
 
 		<aui:input name="settings--bonita.serverUrl--" value="<%=serverUrl%>" type="text" label="Server URL">
+			<aui:validator name="required"/>
+			<aui:validator name="url"/>
+		</aui:input>
+		
+		<aui:input name="settings--bonita.serverUrlForm--" value="<%=serverUrlForm%>" type="text" label="Server URL Form">
 			<aui:validator name="required"/>
 			<aui:validator name="url"/>
 		</aui:input>

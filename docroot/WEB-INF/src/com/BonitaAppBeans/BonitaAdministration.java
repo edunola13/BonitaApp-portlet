@@ -11,6 +11,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.util.PortalUtil;
 
 import bonitaApi.BonitaApi;
+import bonitaClass.Task;
 
 public class BonitaAdministration {
 	public static String[] especialCharacters= {"+","-","/","%","*","!","?","#","\\","|"};
@@ -59,6 +60,10 @@ public class BonitaAdministration {
 		return isAdmin;
 	}
 	
+	public String getUrlForm(Task task){
+		return this.config.getServerUrl() + "loginservice?redirectUrl=/bonita/portal/homepage?ui=form&amp;ui=form&amp;locale=default#form="+ task.getProcess().getName() +"--"+task.getProcess().getVersion()+"--"+ task.getName() +"$entry&amp;task="+ Long.toString(task.getId()) +"&amp;mode=form";
+	}
+	
 	public Boolean updateData(ActionRequest request) throws PortalException, SystemException{
 		BonitaApi bon= new BonitaApi(this.config.getVersion(), this.config.getServerUrl(), this.config.getUserAdmin(), this.config.getPassAdmin());
 		
@@ -93,7 +98,7 @@ public class BonitaAdministration {
 			encryptedPass= encryptedPass.replace(especialCharacters[i], "");
 		}
 		return encryptedPass;
-	}
+	}	
 	
 	public BonitaConfig getConfig() {
 		return config;

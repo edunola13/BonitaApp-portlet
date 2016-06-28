@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 public class BonitaConfig {
 	private String version= "6.2";
 	private String serverUrl= "http://localhost:8080/bonita/";
+	private String serverUrlForm= "http://localhost:8080/bonita/";
 	private String userAdmin= "admin";
 	private String passAdmin= "";
 	private String adminProfile= "";
@@ -46,6 +47,14 @@ public class BonitaConfig {
 
 	public void setServerUrl(String serverUrl) {
 		this.serverUrl = serverUrl;
+	}
+
+	public String getServerUrlForm() {
+		return serverUrlForm;
+	}
+
+	public void setServerUrlForm(String serverUrlForm) {
+		this.serverUrlForm = serverUrlForm;
 	}
 
 	public String getUserAdmin() {
